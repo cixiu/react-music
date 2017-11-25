@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import LazyLoad from 'react-lazyload';
 import Slider from 'base/slider/slider';
 import Scroll from 'base/scroll/scroll';
+import Loading from 'base/loading/loading';
 import { getRecommend, getDiscList } from 'api/recommend';
 import { ERR_OK } from 'api/config';
 import './index.styl';
@@ -45,9 +46,10 @@ class Recommend extends Component {
         const {recommends, discList} = this.state;
         return (
             <div className="recommend">
-                <Scroll className="recommend-content" probeType={3}>
+                <Scroll className="recommend-content" probeType={3} listenScroll={true}>
                     <div>
-                        {recommends.length > 0 ? (
+                        {
+                            recommends.length > 0 &&
                             <div className="slider-wrapper">
                                 <div className="slider-content">
                                     <Slider>
@@ -61,7 +63,6 @@ class Recommend extends Component {
                                     </Slider>
                                 </div>
                             </div>
-                        ) : null
                         }
                         <div className="recommend-list">
                             <h1 className="list-title">热门歌单推荐</h1>
@@ -83,6 +84,12 @@ class Recommend extends Component {
                             </ul>
                         </div>
                     </div>
+                    {
+                        discList.length === 0 && 
+                        <div className="loading-container">
+                            <Loading />
+                        </div>
+                    }
                 </Scroll>
             </div>
         )
