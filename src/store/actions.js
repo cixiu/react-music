@@ -1,6 +1,6 @@
-import * as types from './actionType';
+import * as types from './actionTypes';
 
-export const addSingerIndex = (index) => ({
-    type: types.ADD_SINGER_INDEX,
-    index
+export const setSinger = (singer) => ({
+    type: types.SET_SINGER,
+    singer
 })

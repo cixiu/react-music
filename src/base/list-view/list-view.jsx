@@ -17,10 +17,16 @@ class ListView extends Component {
     shortcutGroup = [];    // 右侧快速查询歌手的入口ref容器
 
     static defaultProps = {
-        data: []
+        data: [],
+        selectItem: null
     }
     static propTypes = {
-        data: PropTypes.array.isRequired
+        data: PropTypes.array.isRequired,
+        selectItem: PropTypes.func
+    }
+
+    selectItem = (item) => {
+        this.props.selectItem && this.props.selectItem(item);
     }
 
     componentDidUpdate(nextProps, nextState) {
@@ -139,7 +145,7 @@ class ListView extends Component {
                             <h2 className="title">{group.title}</h2>
                             <ul>
                                 {group.items.map(item => 
-                                    <li className="list-group-item" key={item.id}>
+                                    <li className="list-group-item" key={item.id} onClick={() => this.selectItem(item)}>
                                         <div className="avatar">
                                             <LazyLoad height={50} throttle={300} once>
                                                 <img width="50" height="50" src={item.avatar} alt={item.name}/>

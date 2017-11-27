@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { getSingerList } from 'api/singer';
 import { ERR_OK } from 'api/config';
+import { setSinger } from 'store/actions';
 import SingerData from 'common/js/singer';
 import ListView from 'base/list-view/list-view';
 import './index.styl';
@@ -15,6 +17,11 @@ class Singer extends Component {
 
     componentWillMount() {
         this._getSingerList();
+    }
+
+    selectSinger = (singer) => {
+        this.props.history.push(`/singer/${singer.id}`);
+        this.props.setSinger(singer);
     }
 
     _getSingerList = () => {
@@ -74,10 +81,20 @@ class Singer extends Component {
     render() {
         return (
             <div className="singer">
-                <ListView data={this.state.singers}/>>
+                <ListView data={this.state.singers} selectItem={this.selectSinger}></ListView>
             </div>
         )
     }
 }
 
-export default Singer;
+// 将dispatch方法映射到组件中
+const mapDisPatchToProps = (dispatch) => ({
+    setSinger: (singer) => {
+        dispatch(setSinger(singer))
+    }
+})
+
+export default connect(
+    null,
+    mapDisPatchToProps
+)(Singer);
