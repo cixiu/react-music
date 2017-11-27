@@ -15,13 +15,15 @@ class Scroll extends Component {
         probeType: 1,
         click: true,
         data: [],
-        listenScroll: false
+        listenScroll: false,
+        scroll: null
     }
     static propTypes = {
         probeType: PropTypes.number.isRequired,
         click: PropTypes.bool.isRequired,
         data: PropTypes.array.isRequired,
-        listenScroll: PropTypes.bool.isRequired
+        listenScroll: PropTypes.bool.isRequired,
+        scroll: PropTypes.func,
     }
     componentDidMount() {
         setTimeout(() => {
@@ -31,8 +33,7 @@ class Scroll extends Component {
     // 当组件接收的props变化时，刷新scroll
     // 由于this.props.children是根据父组件异步获取数据渲染的，
     // 所以在数据获取成功后，渲染的children就会改变，这时这个生命周期钩子函数就会调用
-    componentWillReceiveProps(nextProps) {
-        console.log(nextProps)
+    componentWillReceiveProps() {
         setTimeout(() => {
             this.refresh();
         }, 20)
@@ -44,12 +45,13 @@ class Scroll extends Component {
         }
         this.scroll = new BScroll(this.wrapper, {
             probeType: this.props.probeType,
-            click: this.props.click
+            click: this.props.click,
         })
         // 是否滚动监听
         if (this.props.listenScroll) {
-            this.scroll.on('scroll', () => {
-                forceCheck()
+            this.scroll.on('scroll', (pos) => {
+                forceCheck();
+                this.props.scroll && this.props.scroll(pos);
             })
         }
     }
@@ -61,6 +63,13 @@ class Scroll extends Component {
     }
     refresh = () => {
         this.scroll && this.scroll.refresh();
+    }
+    scrollTo = (...rest) => {
+        this.scroll && this.scroll.scrollTo.apply(this.scroll, rest);
+    }
+    scrollToElement = (...rest) => {
+        this.scroll && this.scroll.scrollToElement.apply(this.scroll, rest);
+        forceCheck();
     }
 
     render() {

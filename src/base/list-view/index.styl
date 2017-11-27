@@ -1,0 +1,67 @@
+@import '~common/stylus/variable.styl'
+
+.listview
+    position: relative
+    width: 100%
+    height: 100%
+    overflow: hidden
+    background: $color-background
+    .list-group
+        padding-bottom: 30px
+        .title
+            height: 30px
+            line-height: 30px
+            padding-left: 20px
+            font-size: $font-size-small
+            color: $color-text-l
+            background: $color-highlight-background
+		.list-group-item
+			display: flex
+			align-items: center
+			padding: 20px 0 0 30px
+			.avatar
+				flex: 0 0 50px
+				width: 50px
+				height: 50px
+				border-radius: 50%
+				overflow: hidden
+			.name
+				margin-left: 20px
+				font-size: $font-size-medium
+				color: $color-text-l
+	.list-shortcut
+		position: absolute
+		top: 50%
+		right: 0
+		z-index: 30
+		transform: translateY(-50%)
+		width: 20px
+		padding: 20px 0
+		border-radius: 10px
+		text-align: center
+		background: $color-background-d
+		font-family: Helvetica
+		.item
+			padding: 3px
+			line-height: 1
+			font-size: $font-size-small
+			color: $color-text-l
+			&.current
+				color: $color-theme
+	.list-fixed
+		position: absolute
+		top: 0
+		left: 0
+		width: 100%
+		.fixed-title
+			height: 30px
+			line-height: 30px
+			padding-left: 20px
+			font-size: $font-size-small
+			color: $color-text-l
+			background: $color-highlight-background
+	.loading-container
+		position: absolute
+		top: 50%
+		width: 100%
+		transform: translateY(-50%)

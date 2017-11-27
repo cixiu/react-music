@@ -1,0 +1,1 @@
+export const ADD_SINGER_INDEX = 'ADD_SINGER_INDEX';

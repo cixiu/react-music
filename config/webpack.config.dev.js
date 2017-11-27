@@ -93,7 +93,7 @@ module.exports = {
       'api': path.resolve('src/api'),
       'components': path.resolve('src/components'),
       'router': path.resolve('src/router'),
-      'redux': path.resolve('src/redux')
+      'store': path.resolve('src/store')
     },
     plugins: [
       // Prevents users from importing files from outside of src/ (or node_modules/).
@@ -170,11 +170,8 @@ module.exports = {
                 loader: require.resolve('css-loader'),
                 options: {
                   importLoaders: 1,
+                  sourceMap: false,
                 },
-              },
-              // add stylus-loader complie stylus to css
-              {
-                loader: require.resolve('stylus-loader'),
               },
               {
                 loader: require.resolve('postcss-loader'),
@@ -182,6 +179,7 @@ module.exports = {
                   // Necessary for external CSS imports to work
                   // https://github.com/facebookincubator/create-react-app/issues/2677
                   ident: 'postcss',
+                  sourceMap: false,
                   plugins: () => [
                     require('postcss-flexbugs-fixes'),
                     autoprefixer({
@@ -194,6 +192,13 @@ module.exports = {
                       flexbox: 'no-2009',
                     }),
                   ],
+                },
+              },
+              // add stylus-loader complie stylus to css
+              {
+                loader: require.resolve('stylus-loader'),
+                options: {
+                  sourceMap: false,
                 },
               },
             ],
