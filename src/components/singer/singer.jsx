@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getSingerList } from 'api/singer';
 import { ERR_OK } from 'api/config';
 import { setSinger } from 'store/actions';
 import SingerData from 'common/js/singer';
 import ListView from 'base/list-view/list-view';
+import SingerDetail from 'components/singer-detail/singer-detail';
 import './index.styl';
 
 const HOT_NAME = '热门';
@@ -82,6 +84,7 @@ class Singer extends Component {
         return (
             <div className="singer">
                 <ListView data={this.state.singers} selectItem={this.selectSinger}></ListView>
+                <Route path="/singer/:id" component={SingerDetail}/>
             </div>
         )
     }

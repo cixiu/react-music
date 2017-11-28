@@ -3,13 +3,16 @@ import { connect } from 'react-redux';
 import { CSSTransition } from 'react-transition-group';
 import { getSingerDetail } from 'api/singer';
 import { ERR_OK } from 'api/config';
+import { createSong } from 'common/js/song';
+import MusicList from 'components/music-list/music-list';
 import './index.styl';
 
 class SingerDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            in: false
+            in: false,
+            songs: []
         }
     }
     componentWillMount() {
@@ -29,7 +32,6 @@ class SingerDetail extends Component {
             this.props.history.goBack();
         }, 300);
     }
-
     // 获取歌手的歌曲
     _getSingerDetail = () => {
         if (!this.props.singer.id) {
@@ -38,17 +40,32 @@ class SingerDetail extends Component {
         }
         getSingerDetail(this.props.singer.id).then(res => {
             if (res.code === ERR_OK) {
-                console.log(res.data.list);
+                this.setState({
+                    songs: this._normalizeSongs(res.data.list)
+                })
+                console.log(this.state.songs)
             }
         }) 
     }
+    // 将歌曲数据处理成需要的格式
+    _normalizeSongs = (list) => {
+        let ret = [];
+        list.forEach(item => {
+            let { musicData } = item;
+            if (musicData.songid && musicData.albummid) {
+                ret.push(createSong(musicData));
+            }
+        });
+        return ret;
+    }
 
     render() {
+        const { songs } = this.state;
+        const title = this.props.singer.name;
+        const bgImage = this.props.singer.avatar;
         return (
             <CSSTransition classNames="slide" timeout={500} in={this.state.in}>
-                <div className="singer-detail">
-                    <button onClick={this.back}>back</button>
-                </div>
+                <MusicList songs={songs} title={title} bgImage={bgImage} back={this.back}></MusicList>
             </CSSTransition>
         )
     }

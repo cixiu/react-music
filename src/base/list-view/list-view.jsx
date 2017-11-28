@@ -38,6 +38,15 @@ class ListView extends Component {
             }, 20)
         }
     }
+
+    componentWillUnmount() {
+        // 点击返回按钮时停止对滚动的监听 消除报错
+        // 当组件中的scroll还在进行momentum运动时，我们点击了返回上一路由时，这个组件即使被卸载，由于我们监听了滚动
+        // 所以Scroll组件中的scroll事件依然会触发，也就是这里的scroll函数依然还在持续的被执行，由于这时已经点击了返回上一路由
+        // 组件已经被卸载了，组件中的dom节点已经是undefined，这时还在执行的函数使用这些被卸载的dom就会报错
+        // 所以在组件卸载的时候，设置一个开关进行拦截
+        this.stop = true;
+    }
     
     onShortcutTouchStart = (e) => {
         let anchorIndex = getData(e.target, 'index');
@@ -57,6 +66,9 @@ class ListView extends Component {
     }
 
     scroll = (pos) => {
+        if (this.stop) {
+            return;
+        }
         this._scrollY(pos);
     }
     // 滚动监听时触发的函数

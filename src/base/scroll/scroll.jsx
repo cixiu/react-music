@@ -15,8 +15,10 @@ class Scroll extends Component {
         probeType: 1,
         click: true,
         data: [],
-        listenScroll: false,
-        scroll: null
+        lazyLoad: true,      // 默认进行懒加载
+        listenScroll: false,  // 默认不进行滚动监听
+        scroll: null,    // 监听滚动的回调函数
+        scrollRef: null  // 为了回去Scroll实例的dom节点做的一个函数属性
     }
     static propTypes = {
         probeType: PropTypes.number.isRequired,
@@ -24,6 +26,7 @@ class Scroll extends Component {
         data: PropTypes.array.isRequired,
         listenScroll: PropTypes.bool.isRequired,
         scroll: PropTypes.func,
+        scrollRef: PropTypes.func
     }
     componentDidMount() {
         setTimeout(() => {
@@ -50,7 +53,7 @@ class Scroll extends Component {
         // 是否滚动监听
         if (this.props.listenScroll) {
             this.scroll.on('scroll', (pos) => {
-                forceCheck();
+                this.props.lazyLoad && forceCheck();
                 this.props.scroll && this.props.scroll(pos);
             })
         }
@@ -74,7 +77,10 @@ class Scroll extends Component {
 
     render() {
         return (
-            <div className={this.props.className + ' scroll'} ref={scroll => this.wrapper = scroll}>
+            <div className={this.props.className + ' scroll'} ref={scroll => {
+                this.wrapper = scroll;
+                this.props.scrollRef && this.props.scrollRef(scroll);  // 对外暴露dom节点
+            }}>
                 {this.props.children}
             </div>
         )
