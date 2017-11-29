@@ -10,6 +10,19 @@ react-lazyload和better-scroll结合使用的问题
     来强制核查图片或者组件是否在视口区，如果在视口区则加载，如果不在视口区则展示<LazyLoad>组件中的placeholder属性
 */
 
+export function debounce(func, delay) {
+  let timer
+
+  return function (...args) {
+    if (timer) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
+      func.apply(this, args)
+    }, delay)
+  }
+} 
+
 class Scroll extends Component {
     static defaultProps = {
         probeType: 1,
@@ -24,6 +37,7 @@ class Scroll extends Component {
         probeType: PropTypes.number.isRequired,
         click: PropTypes.bool.isRequired,
         data: PropTypes.array.isRequired,
+        lazyLoad: PropTypes.bool,
         listenScroll: PropTypes.bool.isRequired,
         scroll: PropTypes.func,
         scrollRef: PropTypes.func
@@ -66,6 +80,9 @@ class Scroll extends Component {
     }
     refresh = () => {
         this.scroll && this.scroll.refresh();
+    }
+    stop = () => {
+        this.scroll && this.scroll.stop();
     }
     scrollTo = (...rest) => {
         this.scroll && this.scroll.scrollTo.apply(this.scroll, rest);

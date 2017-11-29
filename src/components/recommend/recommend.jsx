@@ -3,6 +3,7 @@ import LazyLoad from 'react-lazyload';
 import Slider from 'base/slider/slider';
 import Scroll from 'base/scroll/scroll';
 import Loading from 'base/loading/loading';
+import LazyImage from 'base/lazy-image/lazy-image';
 import { getRecommend, getDiscList } from 'api/recommend';
 import { ERR_OK } from 'api/config';
 import './index.styl';
@@ -19,6 +20,11 @@ class Recommend extends Component {
     componentWillMount() {
         this._getRecommend();
         this._getDiscList();
+    }
+
+    componentWillUnmount() {
+        // 所以在组件卸载的时候，应该让Scroll停止运行
+        this.Scroll.stop();
     }
 
     // 获取推荐的slider数据
@@ -46,7 +52,12 @@ class Recommend extends Component {
         const {recommends, discList} = this.state;
         return (
             <div className="recommend">
-                <Scroll className="recommend-content" probeType={3} listenScroll={true}>
+                <Scroll 
+                        className="recommend-content" 
+                        probeType={3} 
+                        listenScroll={true} 
+                        ref={scroll => this.Scroll = scroll}
+                >
                     <div>
                         {
                             recommends.length > 0 &&
@@ -70,7 +81,7 @@ class Recommend extends Component {
                                 {discList.map(item => (
                                     <li className="item" key={item.dissid}>
                                         <div className="icon">
-                                            <LazyLoad throttle={200} height={60} overflow={true}>
+                                            <LazyLoad height={60} debounce={300} once placeholder={<LazyImage />}>
                                                 <img width="60" height="60" src={item.imgurl} alt={item.dissname}/>
                                             </LazyLoad>
                                         </div>
