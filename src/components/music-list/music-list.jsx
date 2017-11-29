@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Scroll from 'base/scroll/scroll';
 import SongList from 'base/song-list/song-list';
 import Loading from 'base/loading/loading';
 import { prefixStyle } from 'common/js/dom';
+import { setPlayStatus, setFullScreen, setPlayList, setSequenceList, setCurrentIndex } from 'store/actions';
 import './index.styl';
 
 const RESERVE_HEIGHT = 40;    // 保留的title高度
@@ -79,6 +81,10 @@ class MusicList extends Component {
         this.bgImageDOM.style[transform] = `scale(${scale})`;
         this.filterDOM.style[backdrop] = `blur(${blur})px`;
     }
+    // 选中歌曲进行播放
+    selectItem = (song, index) => {
+        this.props.selectPlay(this.props.songs, index);
+    }
 
     render() {
         const {songs, title, bgImage} = this.props;
@@ -114,7 +120,7 @@ class MusicList extends Component {
                         ref={scroll => this.Scroll = scroll}
                 >
                     <div className="song-list-wrapper">
-                        <SongList songs={songs}></SongList>
+                        <SongList songs={songs} selectItem={this.selectItem}></SongList>
                     </div>
                     {songs.length === 0 &&
                         <div className="loading-container">
@@ -127,4 +133,19 @@ class MusicList extends Component {
     }
 }
 
-export default withRouter(MusicList);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        selectPlay: (list, index) => {
+            dispatch(setPlayStatus(true))
+            dispatch(setFullScreen(true))
+            dispatch(setPlayList(list))
+            dispatch(setSequenceList(list))
+            dispatch(setCurrentIndex(index))
+        }
+    }
+}
+
+export default withRouter(connect(
+    null,
+    mapDispatchToProps
+)(MusicList));
