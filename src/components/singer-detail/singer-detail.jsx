@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { CSSTransition } from 'react-transition-group';
 import { getSingerDetail } from 'api/singer';
 import { ERR_OK } from 'api/config';
-import { createSong } from 'common/js/song';
+import { createSong, isValidMusic } from 'common/js/song';
 import MusicList from 'components/music-list/music-list';
 import './index.styl';
 
@@ -43,7 +43,6 @@ class SingerDetail extends Component {
                 this.setState({
                     songs: this._normalizeSongs(res.data.list)
                 })
-                console.log(this.state.songs)
             }
         }) 
     }
@@ -52,7 +51,7 @@ class SingerDetail extends Component {
         let ret = [];
         list.forEach(item => {
             let { musicData } = item;
-            if (musicData.songid && musicData.albummid) {
+            if (isValidMusic(musicData)) {
                 ret.push(createSong(musicData));
             }
         });

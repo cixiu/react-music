@@ -6,7 +6,7 @@ import Scroll from 'base/scroll/scroll';
 import SongList from 'base/song-list/song-list';
 import Loading from 'base/loading/loading';
 import { prefixStyle } from 'common/js/dom';
-import { setPlayStatus, setFullScreen, setPlayList, setSequenceList, setCurrentIndex } from 'store/actions';
+import { setPlayStatus, setPlayList, setSequenceList, setCurrentIndex } from 'store/actions';
 import './index.styl';
 
 const RESERVE_HEIGHT = 40;    // 保留的title高度
@@ -51,6 +51,9 @@ class MusicList extends Component {
     }
     // 监听滚动时触发
     scroll = (pos) => {
+        if (!this.props.songs.length) {
+            return
+        }
         let newY = pos.y;
         // 上滑效果
         let TranslateY = Math.max(this.minTranslateY, newY);
@@ -137,7 +140,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         selectPlay: (list, index) => {
             dispatch(setPlayStatus(true))
-            dispatch(setFullScreen(true))
+            // dispatch(setFullScreen(true))
             dispatch(setPlayList(list))
             dispatch(setSequenceList(list))
             dispatch(setCurrentIndex(index))

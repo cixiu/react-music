@@ -34,3 +34,7 @@ const splitSinger = (singer) => {
     });
     return ret.join('/');
 }
+// 将付费歌曲过滤掉
+export function isValidMusic(musicData) {
+    return musicData.songid && musicData.albummid && (!musicData.pay || musicData.pay.payalbumprice === 0)
+}

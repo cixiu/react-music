@@ -67,6 +67,10 @@ class ListView extends Component {
     }
 
     scroll = (pos) => {
+        // 数据还在加载中的时候进行滑动，则返回
+        if (!this.props.data.length) {
+            return
+        }
         this._scrollY(pos);
     }
     // 滚动监听时触发的函数
@@ -74,7 +78,7 @@ class ListView extends Component {
         const newY = pos.y || pos;
         let listHeight = this.listHeight;
         // 当滚动到顶部 newY > 0时
-        if (newY > 0) {
+        if (newY >= 0) {
             this.listFixed.style.display = 'none';
             return;
         }
