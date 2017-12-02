@@ -6,7 +6,9 @@ import Scroll from 'base/scroll/scroll';
 import SongList from 'base/song-list/song-list';
 import Loading from 'base/loading/loading';
 import { prefixStyle } from 'common/js/dom';
-import { setPlayStatus, setPlayList, setSequenceList, setCurrentIndex } from 'store/actions';
+import { setPlayStatus, setPlayList, setSequenceList, setCurrentIndex, setPlayMode } from 'store/actions';
+import { playMode } from 'common/js/config';
+import { shuffle } from 'common/js/util';
 import './index.styl';
 
 const RESERVE_HEIGHT = 40;    // 保留的title高度
@@ -86,7 +88,12 @@ class MusicList extends Component {
     }
     // 选中歌曲进行播放
     selectItem = (song, index) => {
-        this.props.selectPlay(this.props.songs, index);
+        const { songs, mode } = this.props;
+        this.props.selectPlay(songs, index, mode);
+    }
+    // 点击随机播放按钮
+    playRandom = () => {
+        this.props.playRandom(this.props.songs);
     }
 
     render() {
@@ -104,7 +111,7 @@ class MusicList extends Component {
                 >
                     {songs.length > 0 &&
                         <div className="play-wrapper" ref={el => this.playWrapperDOM = el}>
-                            <div className="play">
+                            <div className="play" onClick={this.playRandom}>
                                 <i className="icon-play"></i>
                                 <span className="text">随机播放全部</span>
                             </div>
@@ -136,19 +143,46 @@ class MusicList extends Component {
     }
 }
 
+const findIndex = (list, song) => {
+    return list.findIndex(item => {
+        return item.id === song.id;
+    })
+}
+
+const mapStateToProps = (state) => {
+    return {
+        mode: state.mode
+    }
+}
+
 const mapDispatchToProps = (dispatch) => {
     return {
-        selectPlay: (list, index) => {
+        // 选择播放歌曲
+        selectPlay: (list, index, mode) => {
+            if (mode === playMode.random) {
+                let randomList = shuffle(list);
+                dispatch(setPlayList(randomList));
+                index = findIndex(randomList, list[index])
+            } else {
+                dispatch(setPlayList(list))
+            }
             dispatch(setPlayStatus(true))
-            // dispatch(setFullScreen(true))
-            dispatch(setPlayList(list))
             dispatch(setSequenceList(list))
             dispatch(setCurrentIndex(index))
+        },
+        // 随机播放全部
+        playRandom: (list) => {
+            dispatch(setPlayMode(playMode.random))
+            dispatch(setPlayStatus(true))
+            let randomList = shuffle(list);
+            dispatch(setPlayList(randomList))
+            dispatch(setSequenceList(list))
+            dispatch(setCurrentIndex(0))
         }
     }
 }
 
 export default withRouter(connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
 )(MusicList));
