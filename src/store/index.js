@@ -13,7 +13,9 @@ const initialState = {
     playList: [],
     sequenceList: [],
     mode: playMode.sequence,
-    currentIndex: -1
+    currentIndex: -1,
+    disc: {},
+    topList: {}
 }
 
 const store = createStore(rootReducers, initialState,

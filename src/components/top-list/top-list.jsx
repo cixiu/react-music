@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { CSSTransition } from 'react-transition-group';
-import { getCdInfo } from 'api/recommend';
+import { getMusicList } from 'api/rank';
 import { ERR_OK } from 'api/config';
 import { createSong, isValidMusic } from 'common/js/song';
 import MusicList from 'components/music-list/music-list';
-import './index.styl';
 
-class Disc extends Component {
+class TopList extends Component {
     state = {
         in: false,
         songs: []
     }
     
+    rank = true;       // 显示排行榜样式图标
+
     componentWillMount() {
-        this._getCdInfo()
+        this._getMusicList()
     }
     componentDidMount() {
         this.setState({
@@ -30,16 +31,16 @@ class Disc extends Component {
             this.props.history.goBack();
         }, 300);
     }
-    // 获取歌单的歌曲
-    _getCdInfo = () => {
-        if (!this.props.disc.dissid) {
-            this.props.history.push('/recommend');
+    // 获取指定排行榜歌单的歌曲
+    _getMusicList = () => {
+        if (!this.props.topList.id) {
+            this.props.history.push('/rank');
             return
         }
-        getCdInfo(this.props.disc.dissid).then(res => {
+        getMusicList(this.props.topList.id).then(res => {
             if (res.code === ERR_OK) {
                 this.setState({
-                    songs: this._normalizeSongs(res.cdlist[0].songlist)
+                    songs: this._normalizeSongs(res.songlist)
                 })
             }
         })
@@ -48,8 +49,9 @@ class Disc extends Component {
     _normalizeSongs = (list) => {
         let ret = [];
         list.forEach(item => {
-            if (isValidMusic(item)) {
-                ret.push(createSong(item));
+            let musicData = item.data
+            if (isValidMusic(musicData)) {
+                ret.push(createSong(musicData));
             }
         });
         return ret;
@@ -57,11 +59,11 @@ class Disc extends Component {
 
     render() {
         const { songs } = this.state;
-        const title = this.props.disc.dissname;
-        const bgImage = this.props.disc.imgurl;
+        const title = this.props.topList.topTitle;
+        const bgImage = songs.length ? songs[0].image : '';
         return (
             <CSSTransition classNames="slide" timeout={500} in={this.state.in}>
-                <MusicList songs={songs} title={title} bgImage={bgImage} back={this.back}></MusicList>
+                <MusicList songs={songs} title={title} bgImage={bgImage} back={this.back} rank={true}></MusicList>
             </CSSTransition>
         )
     }
@@ -70,10 +72,10 @@ class Disc extends Component {
 // 将redux store状态树上的state映射到组件的props中
 const mapStateToProps = (state) => {
     return {
-        disc: state.disc
+        topList: state.topList
     }
 } 
 
 export default connect(
     mapStateToProps
-)(Disc);
+)(TopList);

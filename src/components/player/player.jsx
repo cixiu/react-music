@@ -65,10 +65,6 @@ class Player extends Component {
     // 音频请求错误时触发
     error = () => {
         this.setSongReady(true);
-        clearTimeout(this.errorTimer);
-        this.errorTimer = setTimeout(() => {
-            this.next();
-        }, 20)
     }
     // 播发器播放时派发的timeUpdate事件所监听的函数
     updateTime = (e) => {

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
+import { connect } from 'react-redux';
 import LazyLoad from 'react-lazyload';
 import Slider from 'base/slider/slider';
 import Scroll from 'base/scroll/scroll';
@@ -9,6 +10,7 @@ import playListHOC from 'base/hoc/playListHOC';    // 添加解决播放歌曲�
 import Disc from 'components/disc/disc';
 import { getRecommend, getDiscList } from 'api/recommend';
 import { ERR_OK } from 'api/config';
+import { setDisc } from 'store/actions';
 import './index.styl';
 
 class Recommend extends Component {
@@ -38,9 +40,10 @@ class Recommend extends Component {
     handlePlayList = () => {
         throw new Error('component must implement handlePlayList method in HOC')
     }
-    // 选择歌单跳转
+    // 选择歌单进行路由跳转
     selectItem = (item) => {
-        this.props.history.push(`/recommend/${item.dissid}`)
+        this.props.history.push(`/recommend/${item.dissid}`);
+        this.props.setDisc(item);
     }
 
     // 获取推荐的slider数据
@@ -124,4 +127,15 @@ class Recommend extends Component {
     }
 }
 
-export default playListHOC(Recommend);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setDisc: (disc) => {
+            dispatch(setDisc(disc))
+        }
+    }
+}
+
+export default connect(
+    null, 
+    mapDispatchToProps
+)(playListHOC(Recommend));

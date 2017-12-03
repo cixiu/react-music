@@ -34,3 +34,13 @@ export const setCurrentIndex = (index) => ({
     type: types.SET_CURRENT_INDEX,
     index
 })
+
+export const setDisc = (disc) => ({
+    type: types.SET_DISC,
+    disc
+})
+
+export const setTopList = (topList) => ({
+    type: types.SET_TOP_LIST,
+    topList
+})

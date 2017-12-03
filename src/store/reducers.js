@@ -72,6 +72,26 @@ const setCurrentIndex = (state = -1, action) => {
     }
 }
 
+// 推荐歌单
+const setDisc = (state = {}, action) => {
+    switch (action.type) {
+        case types.SET_DISC:
+            return action.disc
+        default:
+            return state
+    }
+}
+
+// 排行榜
+const setTopList = (state = {}, action) => {
+    switch (action.type) {
+        case types.SET_TOP_LIST:
+            return action.topList
+        default:
+            return state
+    }
+}
+
 const rootReducers = combineReducers({
     singer: setSinger,
     playing: setPlayStatus,
@@ -79,7 +99,9 @@ const rootReducers = combineReducers({
     playList: setPlayList,
     sequenceList: setSequenceList,
     mode: setPlayMode,
-    currentIndex: setCurrentIndex 
+    currentIndex: setCurrentIndex,
+    disc: setDisc,
+    topList: setTopList
 })
 
 export default rootReducers;

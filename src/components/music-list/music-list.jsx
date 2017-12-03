@@ -27,13 +27,15 @@ class MusicList extends Component {
         title: '',
         back: () => {
             console.log('请传入一个路由返回操作的函数');
-        }
+        },
+        rank: false
     }
     static propTypes = {
         bgImage: PropTypes.string,
         songs: PropTypes.array.isRequired,
         title: PropTypes.string.isRequired,
-        back: PropTypes.func.isRequired
+        back: PropTypes.func.isRequired,
+        rank: PropTypes.bool.isRequired
     }
     componentDidMount() {
         this.imageHeight = this.bgImageDOM.clientHeight;
@@ -106,7 +108,7 @@ class MusicList extends Component {
     }
 
     render() {
-        const {songs, title, bgImage} = this.props;
+        const {songs, title, bgImage, rank} = this.props;
         return (
             <div className="music-list">
                 <div className="back" onClick={this.back}>
@@ -139,7 +141,7 @@ class MusicList extends Component {
                         ref={scroll => this.Scroll = scroll}
                 >
                     <div className="song-list-wrapper">
-                        <SongList songs={songs} selectItem={this.selectItem}></SongList>
+                        <SongList songs={songs} selectItem={this.selectItem} rank={rank}></SongList>
                     </div>
                     {songs.length === 0 &&
                         <div className="loading-container">

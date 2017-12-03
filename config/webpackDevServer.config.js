@@ -126,6 +126,29 @@ module.exports = function(proxy, allowedHost) {
           console.log(e)
         });
       });
+      // 代理歌单详情
+      app.get('/api/getCdInfo', function (req, res) {
+        const url = 'https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg';
+        axios.get(url, {
+          headers: {
+            referer: 'https://c.y.qq.com/',
+            host: 'c.y.qq.com'
+          },
+          params: req.query
+        }).then(response => {
+          let ret = response.data;
+          if (typeof ret === 'string') {
+            let reg = /^\w+\(({[^()]+})\)$/;
+            let matches = ret.match(reg);
+            if (matches) {
+              ret = JSON.parse(matches[1]);
+            }
+          }
+          res.json(ret)
+        }).catch(e => {
+          console.log(e)
+        });
+      });
       // This lets us open files from the runtime error overlay.
       app.use(errorOverlayMiddleware());
       // This service worker file is effectively a 'no-op' that will reset any
