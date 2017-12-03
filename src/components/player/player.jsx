@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import NormalPlayer from 'components/normal-player/normal-player';
 import MiniPlayer from 'components/mini-player/mini-player';
-import { setFullScreen, setPlayStatus } from 'store/actions';
+import { setFullScreen, setPlayStatus, setCurrentIndex } from 'store/actions';
 import { playMode } from 'common/js/config';
 import Lyric from 'lyric-parser';
 import './index.styl';
@@ -64,7 +64,11 @@ class Player extends Component {
     }
     // 音频请求错误时触发
     error = () => {
-        this.setSongReady(true)
+        this.setSongReady(true);
+        clearTimeout(this.errorTimer);
+        this.errorTimer = setTimeout(() => {
+            this.next();
+        }, 20)
     }
     // 播发器播放时派发的timeUpdate事件所监听的函数
     updateTime = (e) => {
@@ -72,12 +76,56 @@ class Player extends Component {
             currentTime: e.target.currentTime
         })
     }
+    // 播放下一首歌曲
+    next = () => {
+        // 如果歌曲没有准备好就点下一首，则什么都不做
+        if (!this.state.songReady) {
+            return
+        }
+        // 如果播放列表只有一首歌，点下一首则进行循环播放
+        if (this.props.playList.length === 1) {
+            this.loop();
+            return
+        } else {
+            let index = this.props.currentIndex + 1;
+            if (index === this.props.playList.length) {
+                index = 0
+            }
+            this.props.setCurrentIndex(index);
+            if (!this.props.playing) {
+                this.togglePlay();
+            }
+        }
+        this.setSongReady(false);
+    }
+    // 播放上一首歌曲
+    prev = () => {
+        // 如果歌曲没有准备好就点下一首，则什么都不做
+        if (!this.state.songReady) {
+            return
+        }
+        // 如果播放列表只有一首歌，点上一首则进行循环播放
+        if (this.props.playList.length === 1) {
+            this.loop();
+            return
+        } else {
+            let index = this.props.currentIndex - 1;
+            if (index === -1) {
+                index = this.props.playList.length - 1;
+            }
+            this.props.setCurrentIndex(index);
+            if (!this.props.playing) {
+                this.togglePlay();
+            }
+        }
+        this.setSongReady(false);
+    }
     // 歌曲播放结束后
     end = () => {
         if (this.props.mode === playMode.loop) {
             this.loop();
         } else {
-            this.NormalPlayer.getWrappedInstance().next();
+            this.next();
         }
     }
     // 单曲循环
@@ -142,15 +190,14 @@ class Player extends Component {
             <React.Fragment>
                 {playList.length > 0 && (
                     <div className="player">
-                        {fullScreen && 
-                        <NormalPlayer style={{display: `${fullScreen ? '' : 'none'}`}}
+                        {fullScreen &&
+                        <NormalPlayer
                                     currentSong={currentSong}
                                     playing={playing}
                                     togglePlay={this.togglePlay}
                                     setFullScreen={setFullScreen}
                                     playList={playList}
                                     songReady={songReady}
-                                    setSongReady={this.setSongReady}
                                     currentTime={currentTime}
                                     percent={percent}
                                     percentChange={this.percentChange}
@@ -159,7 +206,8 @@ class Player extends Component {
                                     currentLyric={currentLyric}
                                     currentLineNum={currentLineNum}
                                     playingLyric={playingLyric}
-                                    loop={this.loop}
+                                    next={this.next}
+                                    prev={this.prev}
                                     ref={el => this.NormalPlayer = el}
                         />}
                         <MiniPlayer 
@@ -189,6 +237,7 @@ const mapStateToProps = (state) => ({
     fullScreen: state.fullScreen,
     sequenceList: state.sequenceList,
     playList: state.playList,
+    currentIndex: state.currentIndex,
     currentSong: state.playList[state.currentIndex] || {},
     playing: state.playing,
     mode: state.mode
@@ -201,6 +250,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         setPlaying: (flag) => {
             dispatch(setPlayStatus(flag))
+        },
+        setCurrentIndex: (index) => {
+            dispatch(setCurrentIndex(index))
         }
     }
 }

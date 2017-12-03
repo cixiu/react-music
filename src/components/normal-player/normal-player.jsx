@@ -30,9 +30,6 @@ class NormalPlay extends Component {
         setFullScreen: null,
         playList: [],
         songReady: false,
-        setSongReady: () => {
-            console.log('请传入一个控制歌曲是否准备就绪的函数')
-        },
         currentTime: 0,
         percent: 0,
         percentChange: (percent) => {
@@ -42,7 +39,12 @@ class NormalPlay extends Component {
         currentLyric: null,
         currentLineNum: 0,
         playingLyric: '',
-        loop: null
+        next: () => {
+            console.log('请输入next属性')
+        },
+        prev: () => {
+            console.log('请输入prev属性')
+        },
     }
     static propTypes = {
         currentSong: PropTypes.object.isRequired,
@@ -51,7 +53,6 @@ class NormalPlay extends Component {
         setFullScreen: PropTypes.func.isRequired,
         playList: PropTypes.array.isRequired,
         songReady: PropTypes.bool.isRequired,
-        setSongReady: PropTypes.func.isRequired,
         currentTime: PropTypes.number.isRequired,
         percent: PropTypes.number.isRequired,
         percentChange: PropTypes.func.isRequired,
@@ -59,7 +60,8 @@ class NormalPlay extends Component {
         currentLyric: PropTypes.object,
         currentLineNum: PropTypes.number.isRequired,
         playingLyric: PropTypes.string.isRequired,
-        loop: PropTypes.func,
+        next: PropTypes.func.isRequired,
+        prev: PropTypes.func.isRequired,
     }
     componentDidMount() {
         this.setState({
@@ -74,50 +76,6 @@ class NormalPlay extends Component {
         setTimeout(() => {
             this.props.setFullScreen(false);
         }, 300)
-    }
-    // 播放下一首歌曲
-    next = () => {
-        // 如果歌曲没有准备好就点下一首，则什么都不做
-        if (!this.props.songReady) {
-            return
-        }
-        // 如果播放列表只有一首歌，点下一首则进行循环播放
-        if (this.props.playList.length === 1) {
-            this.props.loop();
-            return
-        } else {
-            let index = this.props.currentIndex + 1;
-            if (index === this.props.playList.length) {
-                index = 0
-            }
-            this.props.setCurrentIndex(index);
-            if (!this.props.playing) {
-                this.props.togglePlay();
-            }
-        }
-        this.props.setSongReady(false);
-    }
-    // 播放上一首歌曲
-    prev = () => {
-        // 如果歌曲没有准备好就点下一首，则什么都不做
-        if (!this.props.songReady) {
-            return
-        }
-        // 如果播放列表只有一首歌，点上一首则进行循环播放
-        if (this.props.playList.length === 1) {
-            this.props.loop();
-            return
-        } else {
-            let index = this.props.currentIndex - 1;
-            if (index === -1) {
-                index = this.props.playList.length - 1;
-            }
-            this.props.setCurrentIndex(index);
-            if (!this.props.playing) {
-                this.props.togglePlay();
-            }
-        }
-        this.props.setSongReady(false);
     }
     // 将时间进行处理成：分：秒的形式
     format = (interval) => {
@@ -321,13 +279,13 @@ class NormalPlay extends Component {
                                 <i className={IconMode}></i>
                             </div>
                             <div className={`icon i-left ${disableCls}`}>
-                                <i className="icon-prev" onClick={this.prev}></i>
+                                <i className="icon-prev" onClick={this.props.prev}></i>
                             </div>
                             <div className={`icon i-center ${disableCls}`}>
                                 <i className={playIconCls} onClick={togglePlay}></i>
                             </div>
                             <div className={`icon i-right ${disableCls}`}>
-                                <i className="icon-next" onClick={this.next}></i>
+                                <i className="icon-next" onClick={this.props.next}></i>
                             </div>
                             <div className="icon i-right">
                                 <i className="icon icon-not-favorite"></i>
@@ -339,10 +297,6 @@ class NormalPlay extends Component {
         )
     }
 }
-
-const mapStateToProps = (state) => ({
-    currentIndex: state.currentIndex
-})
 
 const mapDispatchToProps = (dispatch) => {
     return {
@@ -359,7 +313,7 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(
-    mapStateToProps,
+    null,
     mapDispatchToProps,
     null,
     {

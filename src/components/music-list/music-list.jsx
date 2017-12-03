@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import Scroll from 'base/scroll/scroll';
 import SongList from 'base/song-list/song-list';
 import Loading from 'base/loading/loading';
+import playListHOC from 'base/hoc/playListHOC';    // 添加解决播放歌曲后滚动高度适配问题的高阶组件
 import { prefixStyle } from 'common/js/dom';
 import { setPlayStatus, setPlayList, setSequenceList, setCurrentIndex, setPlayMode } from 'store/actions';
 import { playMode } from 'common/js/config';
@@ -37,8 +38,8 @@ class MusicList extends Component {
     componentDidMount() {
         this.imageHeight = this.bgImageDOM.clientHeight;
         this.minTranslateY = -this.imageHeight + RESERVE_HEIGHT;
-        // this.scrollDOM获取的是Scroll组件暴露出的一个DOM子节点
-        this.ScrollDOM.style.top = `${this.imageHeight}px`;
+        // this.listDOM获取的是Scroll组件暴露出的一个DOM子节点
+        this.listDOM.style.top = `${this.imageHeight}px`;
     }
     componentWillUnmount() {
         // 点击返回按钮时停止对滚动的监听 消除报错
@@ -47,6 +48,10 @@ class MusicList extends Component {
         // 组件已经被卸载了，组件中的dom节点已经是undefined，这时还在执行的函数使用这些被卸载的dom就会报错
         // 所以在组件卸载的时候，应该让Scroll停止运行
         this.Scroll.stop();
+    }
+    componentDidUpdate() {
+        // 如果高阶组件不传这个处理函数，则执行实例下的这个方法  否则执行高阶组件下的这个方法
+        this.handlePlayList()
     }
     back = () => {
         this.props.back();
@@ -95,6 +100,10 @@ class MusicList extends Component {
     playRandom = () => {
         this.props.playRandom(this.props.songs);
     }
+    // 需要在高阶组件中定义要处理playList的事情
+    handlePlayList = () => {
+        throw new Error('component must implement handlePlayList method in HOC')
+    }
 
     render() {
         const {songs, title, bgImage} = this.props;
@@ -122,7 +131,7 @@ class MusicList extends Component {
                 <div className="bg-layer" ref={el => this.bgLayerDOM = el}></div>
                 <Scroll 
                         className="list" 
-                        scrollRef={el => this.ScrollDOM = el}
+                        scrollRef={el => this.listDOM = el}
                         probeType={this.probeType}
                         listenScroll={this.listenScroll}
                         scroll={this.scroll}
@@ -185,4 +194,4 @@ const mapDispatchToProps = (dispatch) => {
 export default withRouter(connect(
     mapStateToProps,
     mapDispatchToProps
-)(MusicList));
+)(playListHOC(MusicList)));

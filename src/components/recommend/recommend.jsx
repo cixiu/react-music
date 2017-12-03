@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
+import { Route } from 'react-router-dom';
 import LazyLoad from 'react-lazyload';
 import Slider from 'base/slider/slider';
 import Scroll from 'base/scroll/scroll';
 import Loading from 'base/loading/loading';
 import LazyImage from 'base/lazy-image/lazy-image';
+import playListHOC from 'base/hoc/playListHOC';    // 添加解决播放歌曲后滚动高度适配问题的高阶组件
+import Disc from 'components/disc/disc';
 import { getRecommend, getDiscList } from 'api/recommend';
 import { ERR_OK } from 'api/config';
 import './index.styl';
@@ -25,6 +28,19 @@ class Recommend extends Component {
     componentWillUnmount() {
         // 所以在组件卸载的时候，应该让Scroll停止运行
         this.Scroll.stop();
+    }
+
+    componentDidUpdate() {
+        // 如果高阶组件不传这个处理函数，则执行实例下的这个方法  否则执行高阶组件下的这个方法
+        this.handlePlayList()
+    }
+    // 需要在高阶组件中定义要处理播放后屏幕适配的问题的事情
+    handlePlayList = () => {
+        throw new Error('component must implement handlePlayList method in HOC')
+    }
+    // 选择歌单跳转
+    selectItem = (item) => {
+        this.props.history.push(`/recommend/${item.dissid}`)
     }
 
     // 获取推荐的slider数据
@@ -51,7 +67,7 @@ class Recommend extends Component {
     render() {
         const {recommends, discList} = this.state;
         return (
-            <div className="recommend">
+            <div className="recommend" ref={el => this.listDOM = el}>
                 <Scroll 
                         className="recommend-content" 
                         probeType={3} 
@@ -79,7 +95,7 @@ class Recommend extends Component {
                             <h1 className="list-title">热门歌单推荐</h1>
                             <ul>
                                 {discList.map(item => (
-                                    <li className="item" key={item.dissid}>
+                                    <li className="item" key={item.dissid} onClick={() => this.selectItem(item)}>
                                         <div className="icon">
                                             <LazyLoad height={60} debounce={300} once placeholder={<LazyImage />}>
                                                 <img width="60" height="60" src={item.imgurl} alt={item.dissname}/>
@@ -102,9 +118,10 @@ class Recommend extends Component {
                         </div>
                     }
                 </Scroll>
+                <Route path="/recommend/:id" component={Disc}/>
             </div>
         )
     }
 }
 
-export default Recommend;
+export default playListHOC(Recommend);

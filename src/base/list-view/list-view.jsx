@@ -51,6 +51,7 @@ class ListView extends Component {
     
     onShortcutTouchStart = (e) => {
         let anchorIndex = getData(e.target, 'index');
+        console.log(anchorIndex)
         this.touch.y1 = e.touches[0].pageY;
         this.touch.anchorIndex = anchorIndex;
         this._scrollTo(anchorIndex);
@@ -78,7 +79,7 @@ class ListView extends Component {
         const newY = pos.y || pos;
         let listHeight = this.listHeight;
         // 当滚动到顶部 newY > 0时
-        if (newY >= 0) {
+        if (newY > 0) {
             this.listFixed.style.display = 'none';
             return;
         }

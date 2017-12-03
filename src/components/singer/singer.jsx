@@ -7,6 +7,7 @@ import { setSinger } from 'store/actions';
 import SingerData from 'common/js/singer';
 import ListView from 'base/list-view/list-view';
 import SingerDetail from 'components/singer-detail/singer-detail';
+import playListHOC from 'base/hoc/playListHOC';    // 添加解决播放歌曲后滚动高度适配问题的高阶组件
 import './index.styl';
 
 const HOT_NAME = '热门';
@@ -16,14 +17,24 @@ class Singer extends Component {
     state = {
         singers: []
     }
-
+    
     componentWillMount() {
         this._getSingerList();
+    }
+
+    componentDidUpdate() {
+        // 如果高阶组件不传这个处理函数，则执行实例下的这个方法  否则执行高阶组件下的这个方法
+        this.handlePlayList();
+        
     }
 
     selectSinger = (singer) => {
         this.props.history.push(`/singer/${singer.id}`);
         this.props.setSinger(singer);
+    }
+    // 需要在高阶组件中定义要处理playList的事情
+    handlePlayList = () => {
+        throw new Error('component must implement handlePlayList method in HOC')
     }
 
     _getSingerList = () => {
@@ -82,7 +93,7 @@ class Singer extends Component {
 
     render() {
         return (
-            <div className="singer">
+            <div className="singer" ref={el => this.listDOM = el}>
                 <ListView data={this.state.singers} selectItem={this.selectSinger}></ListView>
                 <Route path="/singer/:id" component={SingerDetail}/>
             </div>
@@ -100,4 +111,4 @@ const mapDisPatchToProps = (dispatch) => ({
 export default connect(
     null,
     mapDisPatchToProps
-)(Singer);
+)(playListHOC(Singer));
