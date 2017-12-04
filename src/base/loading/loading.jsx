@@ -4,7 +4,7 @@ import './index.styl';
 
 class Loading extends Component {
     static defaultProps = {
-        title: '正在加载...'
+        title: '正在加载···'
     }
     static propTypes = {
         title: PropTypes.string.isRequired

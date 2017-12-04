@@ -51,8 +51,8 @@ class MiniPlay extends Component {
                         <img width="40" height="40" className={cdRotateCls} src={currentSong.image} alt={currentSong.name}/>
                     </div>
                     <div className="text">
-                        <h2 className="name">{currentSong.name}</h2>
-                        <p className="desc">{currentSong.singer}</p>
+                        <h2 className="name" dangerouslySetInnerHTML={{__html: currentSong.name}}></h2>
+                        <p className="desc" dangerouslySetInnerHTML={{__html: currentSong.singer}}></p>
                     </div>
                     <div className="control">
                         <ProgressCircle radius={32} percent={percent}>

@@ -28,10 +28,14 @@ class Scroll extends Component {
         probeType: 1,
         click: true,
         data: [],
-        lazyLoad: true,      // 默认进行懒加载
-        listenScroll: false,  // 默认不进行滚动监听
-        scroll: null,    // 监听滚动的回调函数
-        scrollRef: null  // 为了回去Scroll实例的dom节点做的一个函数属性
+        lazyLoad: true,         // 默认进行懒加载
+        listenScroll: false,    // 默认不进行滚动监听
+        scroll: null,           // 监听滚动的回调函数
+        scrollRef: null,        // 为了回去Scroll实例的dom节点做的一个函数属性
+        pullUpLoad: false,       // 上拉加载更多配置
+        loadMore: () => {
+            console.log('请传入执行加载数据更多的异步数据请求')
+        }
     }
     static propTypes = {
         probeType: PropTypes.number.isRequired,
@@ -40,7 +44,12 @@ class Scroll extends Component {
         lazyLoad: PropTypes.bool,
         listenScroll: PropTypes.bool.isRequired,
         scroll: PropTypes.func,
-        scrollRef: PropTypes.func
+        scrollRef: PropTypes.func,
+        pullUpLoad: PropTypes.oneOfType([
+            PropTypes.bool,
+            PropTypes.object
+        ]),
+        loadMore: PropTypes.func.isRequired,
     }
     componentDidMount() {
         setTimeout(() => {
@@ -52,7 +61,7 @@ class Scroll extends Component {
     // 所以在数据获取成功后，渲染的children就会改变，这时这个生命周期钩子函数就会调用
     componentWillReceiveProps() {
         setTimeout(() => {
-            this.refresh();
+            this.refresh()
         }, 20)
     }
     // 初始化better-scroll
@@ -63,12 +72,21 @@ class Scroll extends Component {
         this.scroll = new BScroll(this.wrapper, {
             probeType: this.props.probeType,
             click: this.props.click,
+            pullUpLoad: this.props.pullUpLoad,
         })
         // 是否滚动监听
         if (this.props.listenScroll) {
             this.scroll.on('scroll', (pos) => {
                 this.props.lazyLoad && forceCheck();
                 this.props.scroll && this.props.scroll(pos);
+            })
+        }
+        // 是否上拉加载更多
+        if (this.props.pullUpLoad) {
+            this.scroll.on('scrollEnd', () => {
+                if (this.scroll.y <= this.scroll.maxScrollX + 50) {
+                    this.props.loadMore && this.props.loadMore()
+                } 
             })
         }
     }
