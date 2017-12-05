@@ -92,6 +92,16 @@ const setTopList = (state = {}, action) => {
     }
 }
 
+// 搜索历史列表
+const setSearchHistory = (state = [], action) => {
+    switch(action.type) {
+        case types.SET_SEARCH_HISTORY:
+            return action.history
+        default:
+            return state
+    }
+}
+
 const rootReducers = combineReducers({
     singer: setSinger,
     playing: setPlayStatus,
@@ -101,7 +111,8 @@ const rootReducers = combineReducers({
     mode: setPlayMode,
     currentIndex: setCurrentIndex,
     disc: setDisc,
-    topList: setTopList
+    topList: setTopList,
+    searchHistory: setSearchHistory
 })
 
 export default rootReducers;

@@ -253,7 +253,7 @@ class NormalPlay extends Component {
                                     {currentLyric.lines.map((line, index) => (
                                         <p 
                                             className={`${currentLineNum === index ? 'text current' : 'text'}`} 
-                                            key={line.time}
+                                            key={index}
                                             ref={el => this.lyricLineGroup[index] = el}
                                         >{line.txt}</p>
                                     ))}

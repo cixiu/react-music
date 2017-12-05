@@ -7,9 +7,7 @@ import SongList from 'base/song-list/song-list';
 import Loading from 'base/loading/loading';
 import playListHOC from 'base/hoc/playListHOC';    // 添加解决播放歌曲后滚动高度适配问题的高阶组件
 import { prefixStyle } from 'common/js/dom';
-import { setPlayStatus, setPlayList, setSequenceList, setCurrentIndex, setPlayMode } from 'store/actions';
-import { playMode } from 'common/js/config';
-import { shuffle } from 'common/js/util';
+import { selectPlay, playRandom } from 'store/dispatchMultiple';
 import './index.styl';
 
 const RESERVE_HEIGHT = 40;    // 保留的title高度
@@ -154,41 +152,21 @@ class MusicList extends Component {
     }
 }
 
-const findIndex = (list, song) => {
-    return list.findIndex(item => {
-        return item.id === song.id;
-    })
-}
-
 const mapStateToProps = (state) => {
     return {
         mode: state.mode
     }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch, props) => {
     return {
         // 选择播放歌曲
         selectPlay: (list, index, mode) => {
-            if (mode === playMode.random) {
-                let randomList = shuffle(list);
-                dispatch(setPlayList(randomList));
-                index = findIndex(randomList, list[index])
-            } else {
-                dispatch(setPlayList(list))
-            }
-            dispatch(setPlayStatus(true))
-            dispatch(setSequenceList(list))
-            dispatch(setCurrentIndex(index))
+            selectPlay(dispatch, list, index, mode)
         },
         // 随机播放全部
         playRandom: (list) => {
-            dispatch(setPlayMode(playMode.random))
-            dispatch(setPlayStatus(true))
-            let randomList = shuffle(list);
-            dispatch(setPlayList(randomList))
-            dispatch(setSequenceList(list))
-            dispatch(setCurrentIndex(0))
+            playRandom(dispatch, list)
         }
     }
 }

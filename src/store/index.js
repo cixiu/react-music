@@ -2,6 +2,7 @@ import rootReducers from 'store/reducers';
 import { createStore, compose, applyMiddleware } from 'redux';
 import { createLogger } from 'redux-logger';
 import { playMode } from 'common/js/config';
+import { loadSearch } from 'common/js/cache';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const loggerMiddleware = createLogger();
@@ -15,7 +16,8 @@ const initialState = {
     mode: playMode.sequence,
     currentIndex: -1,
     disc: {},
-    topList: {}
+    topList: {},
+    searchHistory: loadSearch()
 }
 
 const store = createStore(rootReducers, initialState,

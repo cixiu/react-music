@@ -1,0 +1,23 @@
+@import '~common/stylus/variable.styl'
+@import '~common/stylus/mixin.styl'
+
+.search-list
+	.search-item
+		display: flex
+		align-items: center
+		height: 40px
+		&.list-exit
+			height: 40px
+			opacity: 1
+		&.list-exit-active
+			height: 0
+			opacity: 0
+			transition: all 100ms
+		.text
+			flex: 1
+			color: $color-text-l
+		.icon
+			extend-click()
+			.icon-delete
+				font-size: $font-size-small
+				color: $color-text-d

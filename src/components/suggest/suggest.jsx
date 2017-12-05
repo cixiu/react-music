@@ -4,12 +4,13 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Scroll from 'base/scroll/scroll';
 import Loading from 'base/loading/loading';
+import NoResult from 'base/no-result/no-result';
 import { search } from 'api/search';
 import { ERR_OK } from 'api/config';
 import { createSong, isValidMusic } from 'common/js/song';
 import Singer from 'common/js/singer';
-import { setSinger, setPlayList, setSequenceList, setCurrentIndex, setPlayStatus } from 'store/actions';
-import { findIndex } from 'common/js/util';
+import { setSinger } from 'store/actions';
+import { insertSong } from 'store/dispatchMultiple'
 import './index.styl';
 
 const TYPE_SINGER = 'singer';
@@ -24,11 +25,19 @@ class Suggest extends Component {
     }
     static defaultProps = {
         query: '',
-        showSinger: true
+        showSinger: true,
+        onBlur: () => {
+            console.log('请传入一个让某个input框失去焦点的处理函数')
+        },
+        saveSearch: () => {
+            console.log('请传入处理选中搜索词进行存储的函数')
+        }
     }
     static propTypes = {
         query: PropTypes.string.isRequired,
         showSinger: PropTypes.bool.isRequired,
+        onBlur: PropTypes.func.isRequired,
+        saveSearch: PropTypes.func.isRequired,
     }
     // 因为我们在父组件中使用的时条件渲染
     // 当父组件的query不为空时，suggest组件首次挂载，那么在componentDidUpdate生命周期是不会执行的
@@ -90,6 +99,7 @@ class Suggest extends Component {
         } else {
             this.props.insertSong(item, this.props)
         }
+        this.props.saveSearch()
     }
     // 根据result数据来判断每条suggest前面的图标
     getIconCls = (item) => {
@@ -106,6 +116,10 @@ class Suggest extends Component {
         } else {
             return `${item.name} - ${item.singer}`;
         }
+    }
+    // 将search-box中的input框中的失焦处理传个scroll组件进行处理
+    onBlur = () => {
+        this.props.onBlur();
     }
     // 处理搜索词的相关数据
     _genResult = (data) => {
@@ -145,6 +159,9 @@ class Suggest extends Component {
             <Scroll className="suggest" 
                     pullUpLoad={pullUpLoad}
                     loadMore={this.loadMore}
+                    lazyLoad={false}
+                    beforeScroll={true}
+                    onBlur={this.onBlur}
                     ref={Scroll => this.Scroll = Scroll}
             >
                 <div>
@@ -161,8 +178,13 @@ class Suggest extends Component {
                         ))}
                     </ul>
                     {hasMore && <Loading></Loading>}
-                    {!hasMore && <p className="no-more">没有更多了哦~~</p>}
+                    {!hasMore && result.length !==0 && <p className="no-more">没有更多了哦~~</p>}
                 </div>
+                {!hasMore && result.length === 0 && 
+                    <div className="no-result-wrapper">
+                        <NoResult title="抱歉，暂无搜索结果！"></NoResult>
+                    </div>
+                }
             </Scroll>
         )
     }
@@ -181,47 +203,10 @@ const mapDisPatchToProps = (dispatch) => ({
     setSinger: (singer) => {
         dispatch(setSinger(singer))
     },
+    // 插入一首歌
     insertSong: (song, {playList, sequenceList, currentIndex}) => {
-        playList = playList.slice();
-		sequenceList = sequenceList.slice();
-		// 记录当前歌曲
-		let currentSong = playList[currentIndex];
-		// 查询当前播发的歌曲列表是否有待插入的歌曲并返回其索引
-		let fpIndex = findIndex(playList, song);
-		// 因为时插入歌曲 所以索引+1
-		currentIndex++;
-		// 插入这首歌到当前位置
-		playList.splice(currentIndex, 0, song);
-		// 如果播放列表已经包含了这首要插入的歌
-		if (fpIndex > -1) {
-			// 当要插入的这首歌的序号大于原播放列表里的序号时 则删除掉原来的歌曲
-			if (currentIndex > fpIndex) {
-				playList.splice(fpIndex, 1);
-				currentIndex--;
-			} else {  // 当要插入的这首歌的序号小于原播放列表里的序号时 则删除掉原来的歌曲
-				playList.splice(fpIndex + 1, 1);
-			}
-		}
-
-		// 记录当前播放歌曲在顺序播放列表中的位置，并且在这个位置之后需要插入待插入的歌曲
-		let currentSIndex = findIndex(sequenceList, currentSong) + 1;
-		// 查询顺序播放歌曲列表是否有待插入的歌曲并返回其索引
-		let fsIndex = findIndex(sequenceList, song);
-		// 在当前顺序播放列表中的当前播放歌曲之后插入待插入的歌曲
-		sequenceList.splice(currentSIndex, 0, song);
-		// 如果顺序播放列表已经包含了这首要插入的歌
-		if (fsIndex > -1) {
-			// 当要插入的这首歌的序号大于原顺序播放列表里的序号时 则删除掉原来的歌曲
-			if (currentSIndex > fsIndex) {
-				sequenceList.splice(fsIndex, 1);
-			} else {  // 当要插入的这首歌的序号小于原顺序播放列表里的序号时 则删除掉原来的歌曲
-				sequenceList.splice(fsIndex + 1, 1);
-			}
-		}
-		dispatch(setPlayList(playList));
-		dispatch(setSequenceList(sequenceList));
-		dispatch(setCurrentIndex(currentIndex));
-		dispatch(setPlayStatus(true));
+        const props = {song, playList, sequenceList, currentIndex}
+        insertSong(dispatch, props)
     }
 })
 

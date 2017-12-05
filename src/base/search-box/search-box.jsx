@@ -21,7 +21,10 @@ class SearchBox extends Component {
         const oldQuery = this.state.query;
         const newQuery = nextState.query;
         if (oldQuery !== newQuery) {
-            this.props.queryChange(newQuery)
+            clearTimeout(this.timer)
+            this.timer = setTimeout(() => {
+                this.props.queryChange(newQuery)
+            }, 300)
         }
     }
     onChange = (e) => {
@@ -37,6 +40,10 @@ class SearchBox extends Component {
             query: query
         })
     }
+    // 使input框失去焦点
+    blur = () => {
+        this.inputDOM.blur()
+    }
 
     render() {
         const { placeholder } = this.props;
@@ -44,7 +51,12 @@ class SearchBox extends Component {
         return (
             <div className="search-box">
                 <i className="icon-search"></i>
-                <input className="box" value={query} placeholder={placeholder} onChange={this.onChange}/>
+                <input  className="box" 
+                        value={query} 
+                        placeholder={placeholder} 
+                        onChange={this.onChange} 
+                        ref={el => this.inputDOM = el}
+                />
                 {!!query && <i className="icon-dismiss" onClick={this.clear}></i>}
             </div>
         )

@@ -5,7 +5,9 @@ export const playListHOC = (WrappedComponent) => {
         
         handlePlayList = () => {
             const bottom = this.props.playList.length > 0 ? '60px' : ''
-            this.listDOM.style.bottom = bottom;
+            if (this.listDOM) {
+                this.listDOM.style.bottom = bottom;
+            }
         }
         
         render() {
