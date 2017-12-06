@@ -29,14 +29,27 @@ class Player extends Component {
     componentDidUpdate() {
         if (this.audioDOM && this.oldSong.id !== this.props.currentSong.id) {
             // 清除快递点击下一首或者上一首，歌词混乱的bug
-            clearTimeout(this.timer)
-            this.timer = setTimeout(() => {
-                this.audioDOM.play()
-                // 获取歌词
-                this.getLyric();
-            }, 1000)
+            this.setSongReady(false);            
+            if (this.state.currentLyric) {
+                this.state.currentLyric.stop()
+                // 重置为null
+                this.setState({
+                    currentLyric: null
+                })
+                this.setState({
+                    currentTime: 0
+                })
+                this.setState({
+                    playingLyric: ''
+                })
+                this.setState({
+                    currentLineNum: 0
+                })
+            }
+            this.audioDOM.play()
+            this.getLyric()
         }
-        if (this.oldPlaying !== this.props.playing) {
+        if (this.audioDOM && this.oldPlaying !== this.props.playing) {
             this.props.playing ? this.audioDOM.play() : this.audioDOM.pause()
         }
     }
@@ -60,7 +73,9 @@ class Player extends Component {
     }
     // 音频准备好了能够播放时触发
     ready = () => {
-        this.setSongReady(true)
+        setTimeout(() => {
+            this.setSongReady(true)            
+        }, 500)
     }
     // 音频请求错误时触发
     error = () => {
@@ -92,7 +107,6 @@ class Player extends Component {
                 this.togglePlay();
             }
         }
-        this.setSongReady(false);
     }
     // 播放上一首歌曲
     prev = () => {

@@ -34,7 +34,10 @@ class Confirm extends Component {
         const { isOpen, text, cancelBtnText, confirmBtnText } = this.props;
         return (
             <CSSTransition classNames="confirm-fade" timeout={300} in={isOpen}>
-                <div className="confirm" style={{ display: `${isOpen ? 'block': 'none'}` }}>
+                <div    className="confirm" 
+                        style={{ display: `${isOpen ? 'block': 'none'}` }} 
+                        onClick={(e) => e.stopPropagation()}
+                >
                     <div className="confirm-wrapper">
                         <div className="confirm-content">
                             <p className="text">{text}</p>

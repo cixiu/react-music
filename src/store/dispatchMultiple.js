@@ -89,3 +89,38 @@ export const clearSearchHistory = (dispatch) => {
     const searchHistory = clearSearch();
     dispatch(types.setSearchHistory(searchHistory));
 }
+
+// 删除一首歌
+export const deleteSong = (dispatch, {song, playList, sequenceList, currentIndex}) => {
+    playList = playList.slice();
+    sequenceList = sequenceList.slice();
+    // 在播放列表中找到要删除的那首歌的索引
+    let pIndex = findIndex(playList, song);
+    // 删除掉播放列表中的那首歌
+    playList.splice(pIndex, 1);
+    // 在顺序播放列表中找到要删除的那首歌的索引
+    let sIndex = findIndex(sequenceList, song);
+    // 删除掉顺序播放列表的那首歌
+    sequenceList.splice(sIndex, 1);
+    if (currentIndex > pIndex || currentIndex === playList.length) {
+        currentIndex--
+    }
+    dispatch(types.setPlayList(playList));
+    dispatch(types.setSequenceList(sequenceList));
+    dispatch(types.setCurrentIndex(currentIndex));
+    if (!playList.length) {
+        dispatch(types.setPlayStatus(false));
+    } else {
+        if (currentIndex === pIndex) {
+            dispatch(types.setPlayStatus(true));
+        }
+    }
+}
+
+// 清空播放列表
+export const clearSongList = (dispatch) => {
+    dispatch(types.setPlayList([]));
+    dispatch(types.setSequenceList([]));
+    dispatch(types.setCurrentIndex(-1));
+    dispatch(types.setPlayStatus(false));
+} 
