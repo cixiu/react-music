@@ -23,7 +23,7 @@ class SearchBox extends Component {
         if (oldQuery !== newQuery) {
             clearTimeout(this.timer)
             this.timer = setTimeout(() => {
-                this.props.queryChange(newQuery)
+                this.props.queryChange(newQuery.trim())
             }, 300)
         }
     }

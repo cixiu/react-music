@@ -15,7 +15,7 @@ class Scroll extends Component {
         probeType: 1,
         click: true,
         data: [],
-        lazyLoad: true,         // 默认进行懒加载
+        lazyLoad: false,         // 默认不进行懒加载
         listenScroll: false,    // 默认不进行滚动监听
         scroll: null,           // 监听滚动的回调函数
         scrollRef: null,        // 为了回去Scroll实例的dom节点做的一个函数属性

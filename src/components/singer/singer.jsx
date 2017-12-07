@@ -100,6 +100,11 @@ class Singer extends Component {
         )
     }
 }
+const mapStateToProps = (state) => {
+    return {
+        playList: state.playList
+    }
+}
 
 // 将dispatch方法映射到组件中
 const mapDisPatchToProps = (dispatch) => ({
@@ -109,6 +114,6 @@ const mapDisPatchToProps = (dispatch) => ({
 })
 
 export default connect(
-    null,
+    mapStateToProps,
     mapDisPatchToProps
 )(playListHOC(Singer));

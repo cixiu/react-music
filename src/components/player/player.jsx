@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import NormalPlayer from 'components/normal-player/normal-player';
 import MiniPlayer from 'components/mini-player/mini-player';
 import { setFullScreen, setPlayStatus, setCurrentIndex } from 'store/actions';
+import { savePlayHistory } from 'store/dispatchMultiple';
 import { playMode } from 'common/js/config';
 import Lyric from 'lyric-parser';
 import './index.styl';
@@ -26,7 +27,7 @@ class Player extends Component {
             }
         }
     }
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
         if (this.audioDOM && this.oldSong.id !== this.props.currentSong.id) {
             // 清除快递点击下一首或者上一首，歌词混乱的bug
             this.setSongReady(false);            
@@ -46,12 +47,21 @@ class Player extends Component {
                     currentLineNum: 0
                 })
             }
-            this.audioDOM.play()
+            if (this.props.playing) {
+                this.audioDOM.play()   
+            }
             this.getLyric()
         }
         if (this.audioDOM && this.oldPlaying !== this.props.playing) {
-            this.props.playing ? this.audioDOM.play() : this.audioDOM.pause()
-        }
+            if (this.props.playing) {
+                this.audioDOM.play();
+                if (this.props.currentIndex === prevProps.currentIndex) {
+                    this.props.savePlayHistory(this.props.currentSong);
+                }
+            } else {
+                this.audioDOM.pause();
+            }
+        } 
     }
     // 歌曲播放暂停开关
     togglePlay = () => {
@@ -76,6 +86,10 @@ class Player extends Component {
         setTimeout(() => {
             this.setSongReady(true)            
         }, 500)
+        // 只有歌曲是播放状态才加入最近播放列表
+        if (this.props.playing) {
+            this.props.savePlayHistory(this.props.currentSong);
+        }
     }
     // 音频请求错误时触发
     error = () => {
@@ -185,6 +199,10 @@ class Player extends Component {
         // 单fullScreen=false时，normal-player组件并没有渲染，所以取不到组件实例下的方法和dom节点
         // 只有当fullScreen=true时，才能获取组件实例下的方法和dom节点
         if (this.props.fullScreen) {
+            // getWrappedInstance是connect函数下设置withRef: true下的方法，用于获取包裹组件的实例
+            // 被高阶组件包裹的组件，通过ref并不能获取包裹组件的实例或者dom节点，因为Refs属性不能传递
+            // getWrappedInstance时connect高阶组件提供的，使得ref用来传递
+            // 由于NormalPlayer被二层connent高阶组件包裹，所以这里需要调用二次getWrappedInstance方法
             this.NormalPlayer.getWrappedInstance().lyricScroll(lineNum);
         }
         this.setState({
@@ -263,6 +281,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         setCurrentIndex: (index) => {
             dispatch(setCurrentIndex(index))
+        },
+        savePlayHistory: (song) => {
+            savePlayHistory(dispatch, song)
         }
     }
 }

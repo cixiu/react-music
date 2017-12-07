@@ -1,8 +1,6 @@
-import { connect } from 'react-redux';
-
-export const playListHOC = (WrappedComponent) => {
+const playListHOC = (WrappedComponent) => {
     class PlayListHOC extends WrappedComponent {
-        
+
         handlePlayList = () => {
             const bottom = this.props.playList.length > 0 ? '60px' : ''
             if (this.listDOM) {
@@ -17,13 +15,7 @@ export const playListHOC = (WrappedComponent) => {
 
     PlayListHOC.displayName = `PlayListHOC(${getDisplayName(WrappedComponent)})`
 
-    const mapStateToProps = (state) => {
-        return {
-            playList: state.playList
-        }
-    }
-
-    return connect(mapStateToProps)(PlayListHOC)
+    return PlayListHOC
 }
 
 function getDisplayName(WrappedComponent) {

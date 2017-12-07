@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
+import { compose } from 'redux';
 import { connect } from 'react-redux';
 import SearchBox from 'base/search-box/search-box';
 import Suggest from 'components/suggest/suggest';
@@ -8,6 +9,7 @@ import SearchList from 'base/search-list/search-list';
 import Confirm from 'base/confirm/confirm';
 import Scroll from 'base/scroll/scroll';
 import playListHOC from 'base/hoc/playListHOC';
+import searchHOC from 'base/hoc/searchHOC';
 import './index.styl';
 import { getHotkey } from 'api/search';
 import { ERR_OK } from 'api/config';
@@ -29,28 +31,6 @@ class Search extends Component {
     // 需要在高阶组件中定义要处理播放后屏幕适配的问题的事情
     handlePlayList = () => {
         throw new Error('component must implement handlePlayList method in HOC')
-    }
-    // 将热门搜索词添加到搜索框中
-    addQuery = (query) => {
-        this.SearchBox.setQuery(query);
-    }
-    // 将函数传个seach-box组件，当search-box中query改变时，search组件中的query也跟着改变
-    queryChange = (query) => {
-        this.setState({
-            query
-        })
-    }
-    // 使search-box中的input失去焦点
-    inputBlur = () => {
-        this.SearchBox.blur();
-    }
-    // 存储选中的搜索词到localStorage中
-    saveSearch = () => {
-        this.props.saveSearch(this.state.query);
-    }
-    // 删除一个搜索历史结果
-    deleteOne = (item) => {
-        this.props.deleteSearch(item);
     }
     // 清空搜索历史
     clearSearch = () => {
@@ -96,7 +76,7 @@ class Search extends Component {
                     >
                     </SearchBox>
                 </div>
-                {!query.trim() ? (
+                {!query ? (
                         <div className="shortcut-wrapper" ref={el => this.listDOM = el}>
                             <Scroll className="shortcut">
                                 <div>
@@ -148,7 +128,8 @@ class Search extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        searchHistory: state.searchHistory
+        searchHistory: state.searchHistory,
+        playList: state.playList
     }
 }
 
@@ -165,8 +146,9 @@ const mapDispatchToProps = (dispatch) => {
         }
     }
 }
-
-export default connect(
+const enhance = compose(connect(
     mapStateToProps,
     mapDispatchToProps
-)(playListHOC(Search));
+), playListHOC, searchHOC);
+
+export default enhance(Search);

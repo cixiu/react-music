@@ -75,6 +75,7 @@ class Recommend extends Component {
                         className="recommend-content" 
                         probeType={3} 
                         listenScroll={true} 
+                        lazyLoad={true}
                         ref={scroll => this.Scroll = scroll}
                 >
                     <div>
@@ -126,6 +127,11 @@ class Recommend extends Component {
         )
     }
 }
+const mapStateToProps = (state) => {
+    return {
+        playList: state.playList
+    }
+}
 
 const mapDispatchToProps = (dispatch) => {
     return {
@@ -136,6 +142,6 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(
-    null, 
+    mapStateToProps, 
     mapDispatchToProps
 )(playListHOC(Recommend));

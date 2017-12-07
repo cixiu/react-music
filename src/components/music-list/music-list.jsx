@@ -154,7 +154,8 @@ class MusicList extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        mode: state.mode
+        mode: state.mode,
+        playList: state.playList
     }
 }
 

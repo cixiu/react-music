@@ -151,6 +151,7 @@ class ListView extends Component {
                     className="listview" 
                     probeType={3} 
                     listenScroll={true} 
+                    lazyLoad={true}
                     ref={listview => this.listview = listview}
                     scroll={this.scroll}
             >

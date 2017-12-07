@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+// import { connect } from 'react-redux';
 import { CSSTransition } from 'react-transition-group';
-import { setCurrentIndex, setPlayMode, setPlayList } from 'store/actions';
-import { playMode } from 'common/js/config';
-import { shuffle } from 'common/js/util';
+// import { setCurrentIndex, setPlayMode, setPlayList } from 'store/actions';
+// import { playMode } from 'common/js/config';
+// import { shuffle } from 'common/js/util';
 import { prefixStyle } from 'common/js/dom';
 import ProgerssBar from 'base/progress-bar/progress-bar';
 import Scroll from 'base/scroll/scroll';
+import playerHOC from 'base/hoc/playerHOC';
 
 const transform = prefixStyle('transform');
 const transitionDuration = prefixStyle('transitionDuration');
@@ -84,27 +85,7 @@ class NormalPlay extends Component {
         const seconds = this._pad(interval % 60);
         return `${minutes}:${seconds}`
     }
-    // 改变播放模式
-    changePlayMode = () => {
-        const mode = (this.props.mode + 1) % 3;
-        this.props.setPlayMode(mode);
-        let list = null;
-        if (mode === playMode.random) {
-            list = shuffle(this.props.sequenceList);
-        } else {
-            list = this.props.sequenceList;
-        }
-        this.resetCurrentIndex(list);
-        this.props.setPlayList(list);
-    }
-    // 重置当前歌曲的索引
-    resetCurrentIndex = (list) => {
-        let index = list.findIndex(item => {
-            return item.id === this.props.currentSong.id
-        })
-        this.props.setCurrentIndex(index);
-    }
-    // 歌词滚动
+    // 歌词滚动 用于父组件Player调用
     lyricScroll = (lineNum) => {
         if (lineNum > 5) {
             let lineEl = this.lyricLineGroup[lineNum - 5];
@@ -203,7 +184,6 @@ class NormalPlay extends Component {
             currentTime,
             percent,
             percentChange,
-            mode,
             currentLyric,
             currentLineNum,
             playingLyric
@@ -214,7 +194,6 @@ class NormalPlay extends Component {
         const disableCls = songReady ? '' : 'disable';
         const FormatCurrentTime = this.format(currentTime);
         const duration = this.format(currentSong.duration);
-        const IconMode = mode === playMode.sequence ? 'icon-sequence' : mode === playMode.loop ? 'icon-loop' : 'icon-random';
         return (
             <CSSTransition classNames="normal" timeout={300} in={this.state.in}>
                 <div className="normal-player">
@@ -276,7 +255,7 @@ class NormalPlay extends Component {
                         </div>
                         <div className="operators">
                             <div className="icon i-left" onClick={this.changePlayMode}>
-                                <i className={IconMode}></i>
+                                <i className={this.IconMode()}></i>
                             </div>
                             <div className={`icon i-left ${disableCls}`}>
                                 <i className="icon-prev" onClick={this.props.prev}></i>
@@ -298,25 +277,4 @@ class NormalPlay extends Component {
     }
 }
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        setCurrentIndex: (index) => {
-            dispatch(setCurrentIndex(index))
-        },
-        setPlayMode: (mode) => {
-            dispatch(setPlayMode(mode))
-        },
-        setPlayList: (list) => {
-            dispatch(setPlayList(list))
-        }
-    }
-}
-
-export default connect(
-    null,
-    mapDispatchToProps,
-    null,
-    {
-        withRef: true
-    }
-)(NormalPlay);
+export default playerHOC(NormalPlay);

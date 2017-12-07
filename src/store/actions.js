@@ -49,3 +49,8 @@ export const setSearchHistory = (history) => ({
     type: types.SET_SEARCH_HISTORY,
     history
 })
+
+export const setPlayHistory = (history) => ({
+    type: types.SET_PLAY_HISTORY,
+    history
+})

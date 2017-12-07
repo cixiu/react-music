@@ -2,7 +2,7 @@
 import * as types from 'store/actions';
 import { playMode } from 'common/js/config';
 import { shuffle, findIndex } from 'common/js/util.js';
-import { saveSearch, deleteSearch, clearSearch } from 'common/js/cache';
+import { saveSearch, deleteSearch, clearSearch, savePlayed } from 'common/js/cache';
 
 // 选择播放歌曲
 export const selectPlay = (dispatch, list, index, mode) => {
@@ -108,13 +108,6 @@ export const deleteSong = (dispatch, {song, playList, sequenceList, currentIndex
     dispatch(types.setPlayList(playList));
     dispatch(types.setSequenceList(sequenceList));
     dispatch(types.setCurrentIndex(currentIndex));
-    if (!playList.length) {
-        dispatch(types.setPlayStatus(false));
-    } else {
-        if (currentIndex === pIndex) {
-            dispatch(types.setPlayStatus(true));
-        }
-    }
 }
 
 // 清空播放列表
@@ -123,4 +116,10 @@ export const clearSongList = (dispatch) => {
     dispatch(types.setSequenceList([]));
     dispatch(types.setCurrentIndex(-1));
     dispatch(types.setPlayStatus(false));
-} 
+}
+
+// 播放历史列表
+export const savePlayHistory = (dispatch, song) => {
+    const playHistory = savePlayed(song);
+    dispatch(types.setPlayHistory(playHistory))
+}

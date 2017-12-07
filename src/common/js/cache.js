@@ -3,6 +3,9 @@ import storage from 'good-storage';
 const SEARCH_KEY = '__search__';
 const SEARCH_MAX_LENGTH = 15;
 
+const PLAY_KEY = '__play__';
+const PLAY_MAX_LENGTH = 200;
+
 // 保存搜索历史进localStorage
 export const saveSearch = (query) => {
     let searches = storage.get(SEARCH_KEY, []);
@@ -13,7 +16,7 @@ export const saveSearch = (query) => {
     return searches;
 }
 
-// 读取localStorage
+// 读取搜索历史的localStorage
 export const loadSearch = () => {
     return storage.get(SEARCH_KEY, []);
 }
@@ -32,6 +35,21 @@ export const deleteSearch = (query) => {
 export const clearSearch = () => {
     storage.remove(SEARCH_KEY);
     return [];
+}
+
+// 将播放的歌曲存入本地缓存
+export const savePlayed = (song) => {
+    let playedSongs = storage.get(PLAY_KEY, []);
+    insertArray(playedSongs, song, (item) => {
+        return item.id === song.id;
+    }, PLAY_MAX_LENGTH);
+    storage.set(PLAY_KEY, playedSongs);
+    return playedSongs;
+}
+
+// 读取播放历史的localStorage
+export const loadPlayed = () => {
+    return storage.get(PLAY_KEY, []);
 }
 
 const insertArray = (arr, val, compare, maxLen) => {

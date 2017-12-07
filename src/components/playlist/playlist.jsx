@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Scroll from 'base/scroll/scroll';
 import Confirm from 'base/confirm/confirm';
+import playerHOC from 'base/hoc/playerHOC';
+import AddSong from 'components/add-song/add-song';
 import { playMode } from 'common/js/config';
 import * as types from 'store/actions';
 import { deleteSong, clearSongList } from 'store/dispatchMultiple';
@@ -11,7 +13,8 @@ import './index.styl';
 
 class PlayList extends Component {
     state = {
-        isOpen: false
+        openConfirm: false,
+        openAddSong: false
     }
     groupList = [];
 
@@ -83,25 +86,40 @@ class PlayList extends Component {
     // 点击垃圾桶，打开提示弹窗
     showConfirm = () => {
         this.setState({
-            isOpen: true
+            openConfirm: true
         })
     }
     // 取消清空
     cancel = () => {
         this.setState({
-            isOpen: false
+            openConfirm: false
         })
     }
     // 确定清空
     confirm = () => {
         this.props.clearSongList();
         this.setState({
-            isOpen: false
+            openConfirm: false
         })
     }
+    // 打开添加歌曲页面
+    openAddSong = () => {
+        this.setState({
+            openAddSong: true
+        })
+    }
+    // 收起添加歌曲页面
+    hideAddSong = () => {
+        this.setState({
+            openAddSong: false
+        })
+    }
+    
 
     render() {
-        const { isOpen, sequenceList } = this.props;
+        const { isOpen, sequenceList, mode } = this.props;
+        // 播放模式的文字表现
+        const ModeText = mode === playMode.sequence ? '顺序播放' : mode === playMode.random ? '随机播放' : '单曲循环'
         // 这一步是有必要的
         this.groupList = [];  
         return (
@@ -110,8 +128,8 @@ class PlayList extends Component {
                     <div className="list-wrapper" onClick={(e) => e.stopPropagation()}>
                         <div className="list-header">
                             <h1 className="title">
-                                <i className="icon"></i>
-                                <span className="text"></span>
+                                <i className={`icon ${this.IconMode()}`} onClick={this.changePlayMode}></i>
+                                <span className="text">{ModeText}</span>
                                 <span className="clear" onClick={this.showConfirm}>
                                     <i className="icon-clear"></i>
                                 </span>
@@ -139,7 +157,7 @@ class PlayList extends Component {
                                     ))}
                                 </TransitionGroup>
                                 <div className="list-operate">
-                                    <div className="add">
+                                    <div className="add" onClick={this.openAddSong}>
                                         <i className="icon-add"></i>
                                         <span className="text">添加歌曲到队列</span>
                                     </div>
@@ -150,27 +168,16 @@ class PlayList extends Component {
                             <span>关闭</span>
                         </div>
                     </div>
-                    <Confirm    isOpen={this.state.isOpen} 
+                    <Confirm    isOpen={this.state.openConfirm} 
                                 text="确定要清空播放列表？" 
                                 confirmBtnText="清空"
                                 cancel={this.cancel}
                                 confirm={this.confirm}
                     ></Confirm>
+                    {this.state.openAddSong && <AddSong isOpen={this.state.openAddSong} hide={this.hideAddSong}></AddSong>}
                 </div>
             </CSSTransition>
         )
-    }
-}
-
-const mapStateToProps = (state) => {
-    const { sequenceList, currentIndex, playList, mode } = state;
-    const currentSong = playList[currentIndex];
-    return {
-        sequenceList,
-        playList,
-        currentIndex,
-        currentSong,
-        mode
     }
 }
 
@@ -192,6 +199,6 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(
-    mapStateToProps,
+    null,
     mapDispatchToProps
-)(PlayList);
+)(playerHOC(PlayList));

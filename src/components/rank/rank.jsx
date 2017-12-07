@@ -50,7 +50,7 @@ class Rank extends Component {
         const { topList } = this.state;
         return (
             <div className="rank" ref={el => this.listDOM = el}>
-                <Scroll className="toplist" probeType={this.probeType} listenScroll={this.listenScroll}>
+                <Scroll className="toplist" probeType={this.probeType} listenScroll={this.listenScroll} lazyLoad={true}>
                     <ul>
                         {topList.map(item => (
                             <li className="item" key={item.id} onClick={() => this.selectItem(item)}>
@@ -81,6 +81,11 @@ class Rank extends Component {
         )
     }
 }
+const mapStateToProps = (state) => {
+    return {
+        playList: state.playList
+    }
+}
 
 const mapDispatchToProps = (dispatch) => {
     return {
@@ -91,6 +96,6 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
 )(playListHOC(Rank));
