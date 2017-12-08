@@ -6,6 +6,7 @@ import { setFullScreen, setPlayStatus, setCurrentIndex } from 'store/actions';
 import { savePlayHistory } from 'store/dispatchMultiple';
 import { playMode } from 'common/js/config';
 import Lyric from 'lyric-parser';
+import { createSelector } from 'reselect';
 import './index.styl';
 
 class Player extends Component {
@@ -14,7 +15,8 @@ class Player extends Component {
         currentTime: 0,
         currentLyric: null,
         currentLineNum: 0,
-        playingLyric: ''
+        playingLyric: '',
+        canPlayLyric: false
     }
     componentWillUpdate(nextProps, nextState) {
         this.oldSong = this.props.currentSong;
@@ -47,6 +49,7 @@ class Player extends Component {
                     currentLineNum: 0
                 })
             }
+            this.audioDOM.src = this.props.currentSong.url;
             if (this.props.playing) {
                 this.audioDOM.play()   
             }
@@ -86,9 +89,19 @@ class Player extends Component {
         setTimeout(() => {
             this.setSongReady(true)            
         }, 500)
+        // 当歌曲可以播放的时候，让歌词也开始播放
+        this.setState({
+            canPlayLyric: true
+        })
         // 只有歌曲是播放状态才加入最近播放列表
         if (this.props.playing) {
             this.props.savePlayHistory(this.props.currentSong);
+        }
+    }
+    pause = () => {
+        this.props.setPlaying(false)
+        if (this.state.currentLyric) {
+          this.state.currentLyric.stop()
         }
     }
     // 音频请求错误时触发
@@ -177,11 +190,15 @@ class Player extends Component {
         const { currentSong } = this.props;
         // getLyric为Song实例下的方法
         currentSong.getLyric().then(lyric => {
+            if (currentSong.lyric !== lyric) {
+                return;
+            }
             this.setState({
                 currentLyric: new Lyric(lyric, this.handleLyric)
             })
-            if (this.props.playing) {
-                this.state.currentLyric.play()
+            if (this.props.playing && this.state.canPlayLyric) {
+                // 这个时候有可能用户已经播放了歌曲，要切到对应位置
+                this.state.currentLyric.seek(this.state.currentTime * 1000)
             }
         }).catch(() => {
             this.setState({
@@ -211,7 +228,7 @@ class Player extends Component {
     }
 
     render() {
-        const { fullScreen, playList, currentSong, playing, setFullScreen, sequenceList, mode  } = this.props;
+        const { fullScreen, playList, currentSong, playing, setFullScreen, sequenceList, mode, favoriteList } = this.props;
         const { songReady, currentTime, currentLyric, currentLineNum, playingLyric } = this.state;
         const percent = currentTime / currentSong.duration;
         return (
@@ -236,6 +253,7 @@ class Player extends Component {
                                     playingLyric={playingLyric}
                                     next={this.next}
                                     prev={this.prev}
+                                    favoriteList={favoriteList}
                                     ref={el => this.NormalPlayer = el}
                         />}
                         <MiniPlayer 
@@ -249,10 +267,11 @@ class Player extends Component {
                         />
                         <audio  src={currentSong.url} 
                                 ref={el => this.audioDOM = el}
-                                onCanPlay={this.ready}
+                                onPlay={this.ready}
                                 onError={this.error}
                                 onTimeUpdate={this.updateTime}
                                 onEnded={this.end}
+                                onPause={this.pause}
                         ></audio>
                     </div>
                 )}
@@ -261,14 +280,25 @@ class Player extends Component {
     }
 }
 
+const getPlayList = state => state.playList;
+const getCurrentIndex = state => state.currentIndex;
+
+const getCurrentSong = createSelector(
+    [getPlayList, getCurrentIndex],
+    (playList, currentIndex) => {
+        return playList[currentIndex]
+    }
+)
+
 const mapStateToProps = (state) => ({
     fullScreen: state.fullScreen,
     sequenceList: state.sequenceList,
     playList: state.playList,
     currentIndex: state.currentIndex,
-    currentSong: state.playList[state.currentIndex] || {},
+    currentSong: getCurrentSong(state) || {},
     playing: state.playing,
-    mode: state.mode
+    mode: state.mode,
+    favoriteList: state.favoriteList
 })
 
 const mapDispatchToProps = (dispatch) => {

@@ -54,3 +54,8 @@ export const setPlayHistory = (history) => ({
     type: types.SET_PLAY_HISTORY,
     history
 })
+
+export const setFavoriteList = (list) => ({
+    type: types.SET_FAVORITE_LIST,
+    list
+})

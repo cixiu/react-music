@@ -55,7 +55,7 @@ class Rank extends Component {
                         {topList.map(item => (
                             <li className="item" key={item.id} onClick={() => this.selectItem(item)}>
                                 <div className="icon">
-                                    <LazyLoad height={100} once placeholder={<LazyImage width={100} height={100} />}>
+                                    <LazyLoad height={100} debounce={300} once placeholder={<LazyImage width={100} height={100} />}>
                                         <img width="100" height="100" src={item.picUrl} alt={item.topTitle}/>
                                     </LazyLoad>
                                 </div>

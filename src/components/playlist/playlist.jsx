@@ -146,8 +146,8 @@ class PlayList extends Component {
                                             >
                                                 <i className={`current ${this.getCurrentIcon(item)}`}></i>
                                                 <span className="text">{item.name}</span>
-                                                <span className="like">
-                                                    <i className="icon-not-favorite"></i>
+                                                <span className="like" onClick={(e) => this.toggleFavorite(item, e)}>
+                                                    <i className={this.getFavoriteIcon(item)}></i>
                                                 </span>
                                                 <span className="delete" onClick={(e) => this.deleteOne(item, index, e)}>
                                                     <i className="icon-delete"></i>

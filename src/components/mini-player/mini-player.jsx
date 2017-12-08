@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+// import { connect } from 'react-redux';
 import { CSSTransition } from 'react-transition-group';
 import ProgressCircle from 'base/progress-circle/progress-circle';
 import PlayList from 'components/playlist/playlist';
@@ -87,20 +87,4 @@ class MiniPlay extends Component {
     }
 }
 
-// const mapStateToProps = (state) => ({
-//     currentSong: state.playList[state.currentIndex] || {},
-//     playing: state.playing
-// })
-
-// const mapDispatchToProps = (dispatch) => {
-//     return {
-//         setFullScreen: (flag) => {
-//             dispatch(setFullScreen(flag))
-//         }
-//     }
-// }
-
-export default connect(
-    // mapStateToProps,
-    // mapDispatchToProps
-)(MiniPlay);
+export default MiniPlay;

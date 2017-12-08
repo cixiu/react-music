@@ -112,6 +112,16 @@ const setPlayHistory = (state = [], action) => {
     }
 }
 
+// 收藏喜欢的列表
+const setFavoriteList = (state = [], action) => {
+    switch(action.type) {
+        case types.SET_FAVORITE_LIST:
+            return action.list
+        default:
+            return state
+    }
+}
+
 const rootReducers = combineReducers({
     singer: setSinger,
     playing: setPlayStatus,
@@ -124,6 +134,7 @@ const rootReducers = combineReducers({
     topList: setTopList,
     searchHistory: setSearchHistory,
     playHistory: setPlayHistory,
+    favoriteList: setFavoriteList
 })
 
 export default rootReducers;

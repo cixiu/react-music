@@ -46,6 +46,7 @@ class NormalPlay extends Component {
         prev: () => {
             console.log('请输入prev属性')
         },
+        favoriteList: []
     }
     static propTypes = {
         currentSong: PropTypes.object.isRequired,
@@ -63,6 +64,7 @@ class NormalPlay extends Component {
         playingLyric: PropTypes.string.isRequired,
         next: PropTypes.func.isRequired,
         prev: PropTypes.func.isRequired,
+        favoriteList: PropTypes.array.isRequired,
     }
     componentDidMount() {
         this.setState({
@@ -267,7 +269,10 @@ class NormalPlay extends Component {
                                 <i className="icon-next" onClick={this.props.next}></i>
                             </div>
                             <div className="icon i-right">
-                                <i className="icon icon-not-favorite"></i>
+                                <i className={this.getFavoriteIcon(currentSong)} 
+                                    onClick={(e) => this.toggleFavorite(currentSong, e)}
+                                >
+                                </i>
                             </div>
                         </div>
                     </div>
