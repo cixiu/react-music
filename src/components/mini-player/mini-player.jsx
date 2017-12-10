@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// import { connect } from 'react-redux';
 import { CSSTransition } from 'react-transition-group';
 import ProgressCircle from 'base/progress-circle/progress-circle';
 import PlayList from 'components/playlist/playlist';
-// import { setFullScreen } from 'store/actions';
 
 class MiniPlay extends Component {
     state = {
@@ -19,7 +17,8 @@ class MiniPlay extends Component {
         },
         setFullScreen: null,
         playList: [],
-        percent: 0
+        percent: 0,
+        playingLyric: ''
     }
     static propTypes = {
         currentSong: PropTypes.object.isRequired,
@@ -28,6 +27,7 @@ class MiniPlay extends Component {
         setFullScreen: PropTypes.func.isRequired,
         playList: PropTypes.array.isRequired,
         percent: PropTypes.number.isRequired,
+        playingLyric: PropTypes.string.isRequired,
     }
     componentDidMount() {
         this.setState({
@@ -56,10 +56,11 @@ class MiniPlay extends Component {
     }
 
     render() {
-        const { currentSong, playing, percent } = this.props;
+        const { currentSong, playing, percent, playingLyric } = this.props;
         const { isOpen } = this.state;
         const cdRotateCls = playing ? 'play' : 'play pause';
-        const MiniPlayIconCls = playing ? 'icon-pause-mini' : 'icon-play-mini'
+        const MiniPlayIconCls = playing ? 'icon-pause-mini' : 'icon-play-mini';
+        const desc = !!playingLyric && playing ? playingLyric : currentSong.singer;
         return (
             <React.Fragment>
                 <CSSTransition classNames="mini" timeout={200} in={this.state.in}>
@@ -69,7 +70,7 @@ class MiniPlay extends Component {
                         </div>
                         <div className="text">
                             <h2 className="name" dangerouslySetInnerHTML={{__html: currentSong.name}}></h2>
-                            <p className="desc" dangerouslySetInnerHTML={{__html: currentSong.singer}}></p>
+                            <p className="desc" dangerouslySetInnerHTML={{__html: desc}}></p>
                         </div>
                         <div className="control">
                             <ProgressCircle radius={32} percent={percent}>

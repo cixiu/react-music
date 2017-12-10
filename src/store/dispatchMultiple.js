@@ -14,7 +14,6 @@ export const selectPlay = (dispatch, list, index, mode) => {
         dispatch(types.setPlayList(list))
     }
     dispatch(types.setPlayStatus(true))
-    dispatch(types.setFullScreen(true))
     dispatch(types.setSequenceList(list))
     dispatch(types.setCurrentIndex(index))
 }

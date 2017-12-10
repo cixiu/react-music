@@ -37,16 +37,10 @@ class Player extends Component {
                 this.state.currentLyric.stop()
                 // 重置为null
                 this.setState({
-                    currentLyric: null
-                })
-                this.setState({
-                    currentTime: 0
-                })
-                this.setState({
-                    playingLyric: ''
-                })
-                this.setState({
-                    currentLineNum: 0
+                    currentLyric: null,
+                    currentTime: 0,
+                    playingLyric: '',
+                    currentLineNum: 0,
                 })
             }
             this.audioDOM.src = this.props.currentSong.url;
@@ -263,6 +257,7 @@ class Player extends Component {
                                     setFullScreen={setFullScreen}
                                     playList={playList}
                                     percent={percent}
+                                    playingLyric={playingLyric}
                                     sequenceList={sequenceList}
                         />
                         <audio  src={currentSong.url} 
