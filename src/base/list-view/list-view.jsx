@@ -21,10 +21,6 @@ class ListView extends Component {
         data: [],
         selectItem: null
     }
-    static propTypes = {
-        data: PropTypes.array.isRequired,
-        selectItem: PropTypes.func
-    }
 
     selectItem = (item) => {
         this.props.selectItem && this.props.selectItem(item);
@@ -51,7 +47,6 @@ class ListView extends Component {
     
     onShortcutTouchStart = (e) => {
         let anchorIndex = getData(e.target, 'index');
-        console.log(anchorIndex)
         this.touch.y1 = e.touches[0].pageY;
         this.touch.anchorIndex = anchorIndex;
         this._scrollTo(anchorIndex);
@@ -204,6 +199,13 @@ class ListView extends Component {
                 }
             </Scroll>
         )
+    }
+}
+
+if (process.env.NODE_ENV === 'development') {
+    ListView.propTypes = {
+        data: PropTypes.array.isRequired,
+        selectItem: PropTypes.func
     }
 }
 

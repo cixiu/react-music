@@ -20,15 +20,7 @@ class MiniPlay extends Component {
         percent: 0,
         playingLyric: ''
     }
-    static propTypes = {
-        currentSong: PropTypes.object.isRequired,
-        playing: PropTypes.bool.isRequired,
-        togglePlay: PropTypes.func.isRequired,
-        setFullScreen: PropTypes.func.isRequired,
-        playList: PropTypes.array.isRequired,
-        percent: PropTypes.number.isRequired,
-        playingLyric: PropTypes.string.isRequired,
-    }
+    
     componentDidMount() {
         this.setState({
             in: true
@@ -85,6 +77,18 @@ class MiniPlay extends Component {
                 <PlayList isOpen={isOpen} hide={this.hide}></PlayList>
             </React.Fragment>
         )
+    }
+}
+
+if (process.env.NODE_ENV === 'development') {
+    MiniPlay.propTypes = {
+        currentSong: PropTypes.object.isRequired,
+        playing: PropTypes.bool.isRequired,
+        togglePlay: PropTypes.func.isRequired,
+        setFullScreen: PropTypes.func.isRequired,
+        playList: PropTypes.array.isRequired,
+        percent: PropTypes.number.isRequired,
+        playingLyric: PropTypes.string.isRequired,
     }
 }
 

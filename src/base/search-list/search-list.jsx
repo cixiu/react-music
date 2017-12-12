@@ -13,11 +13,7 @@ class SearchList extends Component {
             console.log(`请传入删除${item}搜索历史的处理函数`)
         }
     }
-    static propTypes = {
-        searches: PropTypes.array.isRequired,
-        selectItem: PropTypes.func.isRequired,
-        deleteOne: PropTypes.func.isRequired,
-    }
+    
     selectItem = (item) => {
         this.props.selectItem(item)
     }
@@ -43,6 +39,14 @@ class SearchList extends Component {
                 </TransitionGroup>
             </div>
         )
+    }
+}
+
+if (process.env.NODE_ENV === 'development') {
+    SearchList.propTypes = {
+        searches: PropTypes.array.isRequired,
+        selectItem: PropTypes.func.isRequired,
+        deleteOne: PropTypes.func.isRequired,
     }
 }
 

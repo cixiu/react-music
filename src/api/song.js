@@ -1,7 +1,7 @@
 import { commonParams, options } from 'api/config';
 import axios from 'axios';
 import jsonp from 'common/js/jsonp';
-import { getUid } from 'common/js/uid';
+// import { getUid } from 'common/js/uid';
 
 export const getLyric = (mid) => {
     const url = '/api/getLyric';
@@ -39,7 +39,7 @@ export const getVKey = (songmid, filename) => {
         uin: 0,
         songmid,
         filename,
-        guid: getUid()
+        guid: 7908462822
     }
 
     return jsonp(url, data, {

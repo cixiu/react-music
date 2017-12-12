@@ -16,14 +16,6 @@ class Confirm extends Component {
             console.log('请传入要确定的操作')
         }
     }
-    static propTypes = {
-        isOpen: PropTypes.bool.isRequired,
-        text: PropTypes.string.isRequired,
-        cancelBtnText: PropTypes.string.isRequired,
-        confirmBtnText: PropTypes.string.isRequired,
-        cancel: PropTypes.func.isRequired,
-        confirm: PropTypes.func.isRequired,
-    }
     cancel = () => {
         this.props.cancel()
     }
@@ -50,6 +42,17 @@ class Confirm extends Component {
                 </div>
             </CSSTransition>
         )
+    }
+}
+
+if (process.env.NODE_ENV === 'development') {
+    Confirm.propTypes = {
+        isOpen: PropTypes.bool.isRequired,
+        text: PropTypes.string.isRequired,
+        cancelBtnText: PropTypes.string.isRequired,
+        confirmBtnText: PropTypes.string.isRequired,
+        cancel: PropTypes.func.isRequired,
+        confirm: PropTypes.func.isRequired,
     }
 }
 

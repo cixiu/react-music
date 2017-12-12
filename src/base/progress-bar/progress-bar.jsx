@@ -15,10 +15,7 @@ class ProgressBar extends Component {
             console.log('请输入一个改变percent的函数', percent)
         }
     }
-    static propTypes = {
-        percent: PropTypes.number.isRequired,
-        percentChange: PropTypes.func.isRequired,
-    }
+    
     componentDidUpdate() {
         const { percent } = this.props;
         if (percent >= 0 && !this.touch.initial) {
@@ -80,6 +77,13 @@ class ProgressBar extends Component {
                 </div>
             </div>
         )
+    }
+}
+
+if (process.env.NODE_ENV === 'development') {
+    ProgressBar.propTypes = {
+        percent: PropTypes.number.isRequired,
+        percentChange: PropTypes.func.isRequired,
     }
 }
 

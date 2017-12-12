@@ -48,24 +48,7 @@ class NormalPlay extends Component {
         },
         favoriteList: []
     }
-    static propTypes = {
-        currentSong: PropTypes.object.isRequired,
-        playing: PropTypes.bool.isRequired,
-        togglePlay: PropTypes.func.isRequired,
-        setFullScreen: PropTypes.func.isRequired,
-        playList: PropTypes.array.isRequired,
-        songReady: PropTypes.bool.isRequired,
-        currentTime: PropTypes.number.isRequired,
-        percent: PropTypes.number.isRequired,
-        percentChange: PropTypes.func.isRequired,
-        mode: PropTypes.number.isRequired,
-        currentLyric: PropTypes.object,
-        currentLineNum: PropTypes.number.isRequired,
-        playingLyric: PropTypes.string.isRequired,
-        next: PropTypes.func.isRequired,
-        prev: PropTypes.func.isRequired,
-        favoriteList: PropTypes.array.isRequired,
-    }
+    
     componentDidMount() {
         this.setState({
             in: true
@@ -279,6 +262,27 @@ class NormalPlay extends Component {
                 </div>
             </CSSTransition>
         )
+    }
+}
+
+if (process.env.NODE_ENV === 'development') {
+    NormalPlay.propTypes = {
+        currentSong: PropTypes.object.isRequired,
+        playing: PropTypes.bool.isRequired,
+        togglePlay: PropTypes.func.isRequired,
+        setFullScreen: PropTypes.func.isRequired,
+        playList: PropTypes.array.isRequired,
+        songReady: PropTypes.bool.isRequired,
+        currentTime: PropTypes.number.isRequired,
+        percent: PropTypes.number.isRequired,
+        percentChange: PropTypes.func.isRequired,
+        mode: PropTypes.number.isRequired,
+        currentLyric: PropTypes.object,
+        currentLineNum: PropTypes.number.isRequired,
+        playingLyric: PropTypes.string.isRequired,
+        next: PropTypes.func.isRequired,
+        prev: PropTypes.func.isRequired,
+        favoriteList: PropTypes.array.isRequired,
     }
 }
 

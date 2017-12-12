@@ -28,22 +28,7 @@ class Scroll extends Component {
             console.log('请传入一个让某个input框失去焦点的处理函数')
         }
     }
-    static propTypes = {
-        probeType: PropTypes.number.isRequired,
-        click: PropTypes.bool.isRequired,
-        data: PropTypes.array.isRequired,
-        lazyLoad: PropTypes.bool,
-        listenScroll: PropTypes.bool.isRequired,
-        scroll: PropTypes.func,
-        scrollRef: PropTypes.func,
-        pullUpLoad: PropTypes.oneOfType([
-            PropTypes.bool,
-            PropTypes.object
-        ]),
-        loadMore: PropTypes.func.isRequired,
-        beforeScroll: PropTypes.bool.isRequired,
-        onBlur: PropTypes.func.isRequired,
-    }
+    
     componentDidMount() {
         setTimeout(() => {
             this._initScroll();
@@ -118,6 +103,25 @@ class Scroll extends Component {
                 {this.props.children}
             </div>
         )
+    }
+}
+
+if (process.env.NODE_ENV === 'development') {
+    Scroll.propTypes = {
+        probeType: PropTypes.number.isRequired,
+        click: PropTypes.bool.isRequired,
+        data: PropTypes.array.isRequired,
+        lazyLoad: PropTypes.bool,
+        listenScroll: PropTypes.bool.isRequired,
+        scroll: PropTypes.func,
+        scrollRef: PropTypes.func,
+        pullUpLoad: PropTypes.oneOfType([
+            PropTypes.bool,
+            PropTypes.object
+        ]),
+        loadMore: PropTypes.func.isRequired,
+        beforeScroll: PropTypes.bool.isRequired,
+        onBlur: PropTypes.func.isRequired,
     }
 }
 

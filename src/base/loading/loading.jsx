@@ -6,9 +6,7 @@ class Loading extends Component {
     static defaultProps = {
         title: '正在加载···'
     }
-    static propTypes = {
-        title: PropTypes.string.isRequired
-    }
+    
     render() {
         return (
             <div className="loading">
@@ -16,6 +14,11 @@ class Loading extends Component {
                 <p className="desc">{this.props.title}</p>
             </div>
         )
+    }
+}
+if (process.env.NODE_ENV === 'development') {
+    Loading.propTypes = {
+        title: PropTypes.string.isRequired
     }
 }
 

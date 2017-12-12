@@ -10,10 +10,6 @@ class ProgressCircle extends Component {
         radius: 100,
         percent: 0
     }
-    static propTypes = {
-        radius: PropTypes.number.isRequired,
-        percent: PropTypes.number.isRequired,
-    }
 
     render() {
         const { radius, percent } = this.props;
@@ -28,6 +24,13 @@ class ProgressCircle extends Component {
                 {this.props.children}
             </div>
         )
+    }
+}
+
+if (process.env.NODE_ENV === 'development') {
+    ProgressCircle.propTypes = {
+        radius: PropTypes.number.isRequired,
+        percent: PropTypes.number.isRequired,
     }
 }
 

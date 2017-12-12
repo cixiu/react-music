@@ -24,10 +24,6 @@ class PlayList extends Component {
             console.log('请传入隐藏播放列表的处理函数')
         }
     }
-    static propTypes = {
-        isOpen: PropTypes.bool.isRequired,
-        hide: PropTypes.func.isRequired,
-    }
 
     componentDidUpdate(prevProps) {
         if (this.props.isOpen === prevProps.isOpen && prevProps.currentSong.id === this.props.currentSong.id) {
@@ -178,6 +174,13 @@ class PlayList extends Component {
                 </div>
             </CSSTransition>
         )
+    }
+}
+
+if (process.env.NODE_ENV === 'development') {
+    PlayList.propTypes = {
+        isOpen: PropTypes.bool.isRequired,
+        hide: PropTypes.func.isRequired,
     }
 }
 

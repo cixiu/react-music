@@ -1,10 +1,28 @@
 import React from 'react';
 import { Route, Redirect, Switch } from 'react-router-dom';
-import Recommend from 'components/recommend/recommend';
-import Singer from 'components/singer/singer';
-import Rank from 'components/rank/rank';
-import Search from 'components/search/search';
-import UserCenter from 'components/user-center/user-center';
+import Loadable from 'react-loadable';
+import Loading from 'base/loading/loading';
+// 路由懒加载
+const Recommend = Loadable({
+    loader: () => import('components/recommend/recommend'),
+    loading: Loading
+})
+const Singer = Loadable({
+    loader: () => import('components/singer/singer'),
+    loading: Loading
+})
+const Rank = Loadable({
+    loader: () => import('components/rank/rank'),
+    loading: Loading
+})
+const Search = Loadable({
+    loader: () => import('components/search/search'),
+    loading: Loading
+})
+const UserCenter = Loadable({
+    loader: () => import('components/user-center/user-center'),
+    loading: Loading
+})
 
 
 const RouterConfig = (

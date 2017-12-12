@@ -1,20 +1,21 @@
 import { getLyric, getVKey } from 'api/song';
 import { ERR_OK } from 'api/config';
-import { getUid } from 'common/js/uid';
+// import { getUid } from 'common/js/uid';
 import { Base64 } from 'js-base64';
 
 let urlMap = {};
 
 export default class Song {
-    constructor({id, mid, name, singer, album, duration, url, image}) {
+    constructor({id, mid, mediamid, name, singer, album, duration, url, image}) {
         this.id = id;
         this.mid = mid;
+        this.mediamid = mediamid;
         this.name = name;
         this.singer = singer;
         this.album = album;
         this.duration = duration;
         this.image = image;
-        this.filename=`C400${this.mid}.m4a`;
+        this.filename=`C400${this.mediamid}.m4a`;
         // 确保一首歌曲的 id 只对应一个 url
         if (urlMap[this.id]) {
             this.url = urlMap[this.id];
@@ -51,7 +52,7 @@ export default class Song {
         getVKey(this.mid, this.filename).then(res => {
         if (res.code === ERR_OK) {
             const vkey = res.data.items[0].vkey
-            this.url = `http://dl.stream.qqmusic.qq.com/${this.filename}?vkey=${vkey}&guid=${getUid()}&uin=0&fromtag=66`
+            this.url = `http://dl.stream.qqmusic.qq.com/${this.filename}?vkey=${vkey}&guid=7908462822&uin=0&fromtag=66`
             urlMap[this.id] = this.url
         }
         })
@@ -62,6 +63,7 @@ export const createSong = (musicData) => {
     return new Song({
         id: musicData.songid,
         mid: musicData.songmid,
+        mediamid: musicData.strMediaMid,
         name: musicData.songname,
         singer: splitSinger(musicData.singer),
         album: musicData.albumname,

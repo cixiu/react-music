@@ -89,6 +89,7 @@ class Player extends Component {
         })
         // 只有歌曲是播放状态才加入最近播放列表
         if (this.props.playing) {
+            this.state.currentLyric && this.state.currentLyric.seek(this.state.currentTime * 1000)
             this.props.savePlayHistory(this.props.currentSong);
         }
     }
@@ -262,7 +263,7 @@ class Player extends Component {
                         />
                         <audio  src={currentSong.url} 
                                 ref={el => this.audioDOM = el}
-                                onPlay={this.ready}
+                                onCanPlay={this.ready}
                                 onError={this.error}
                                 onTimeUpdate={this.updateTime}
                                 onEnded={this.end}

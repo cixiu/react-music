@@ -20,7 +20,7 @@ class MusicList extends Component {
     lazyLoad = false;
 
     static defaultProps = {
-        bgImgae: '',
+        bgImage: '',
         songs: [],
         title: '',
         back: () => {
@@ -28,15 +28,15 @@ class MusicList extends Component {
         },
         rank: false
     }
-    static propTypes = {
-        bgImage: PropTypes.string,
-        songs: PropTypes.array.isRequired,
-        title: PropTypes.string.isRequired,
-        back: PropTypes.func.isRequired,
-        rank: PropTypes.bool.isRequired
+    
+    shouldComponentUpdate(nextProps) {
+        if (!nextProps.bgImage) {
+            return false
+        }
+        return true
     }
     componentDidMount() {
-        this.imageHeight = this.bgImageDOM.clientHeight;
+        this.imageHeight = this.bgImageDOM.clientHeight;  
         this.minTranslateY = -this.imageHeight + RESERVE_HEIGHT;
         // this.listDOM获取的是Scroll组件暴露出的一个DOM子节点
         this.listDOM.style.top = `${this.imageHeight}px`;
@@ -104,9 +104,15 @@ class MusicList extends Component {
     handlePlayList = () => {
         throw new Error('component must implement handlePlayList method in HOC')
     }
+    bgImageRef = (el) => {
+        if (el) {
+            this.bgImageDOM = el
+        }
+    }
 
     render() {
         const {songs, title, bgImage, rank} = this.props;
+        // console.log(this.props)
         return (
             <div className="music-list">
                 <div className="back" onClick={this.back}>
@@ -116,7 +122,7 @@ class MusicList extends Component {
                 <div 
                     className="bg-image" 
                     style={{backgroundImage: `url(${bgImage})`}} 
-                    ref={el => this.bgImageDOM = el}
+                    ref={this.bgImageRef.bind(this)}
                 >
                     {songs.length > 0 &&
                         <div className="play-wrapper" ref={el => this.playWrapperDOM = el}>
@@ -149,6 +155,16 @@ class MusicList extends Component {
                 </Scroll>
             </div>
         )
+    }
+}
+
+if (process.env.NODE_ENV === 'development') {
+    MusicList.propTypes = {
+        bgImage: PropTypes.string.isRequired,
+        songs: PropTypes.array.isRequired,
+        title: PropTypes.string.isRequired,
+        back: PropTypes.func.isRequired,
+        rank: PropTypes.bool.isRequired
     }
 }
 

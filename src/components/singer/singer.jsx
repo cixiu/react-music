@@ -6,9 +6,15 @@ import { ERR_OK } from 'api/config';
 import { setSinger } from 'store/actions';
 import SingerData from 'common/js/singer';
 import ListView from 'base/list-view/list-view';
-import SingerDetail from 'components/singer-detail/singer-detail';
 import playListHOC from 'base/hoc/playListHOC';    // 添加解决播放歌曲后滚动高度适配问题的高阶组件
 import './index.styl';
+// 路由懒加载
+import Loadable from 'react-loadable';
+import Loading from 'base/loading/loading';
+const SingerDetail = Loadable({
+    loader: () => import('components/singer-detail/singer-detail'),
+    loading: Loading
+})
 
 const HOT_NAME = '热门';
 const HOT_SINGER_LENGTH = 10;

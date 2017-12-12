@@ -10,11 +10,6 @@ class SongList extends Component {
         },
         rank: false
     }
-    static propTypes = {
-        songs: PropTypes.array.isRequired,
-        selectItem: PropTypes.func.isRequired,
-        rank: PropTypes.bool.isRequired
-    }
 
     selectItem = (song, index) => {
         this.props.selectItem && this.props.selectItem(song, index)
@@ -59,6 +54,14 @@ class SongList extends Component {
                 </ul>
             </div>
         )
+    }
+}
+
+if (process.env.NODE_ENV === 'development') {
+    SongList.propTypes = {
+        songs: PropTypes.array.isRequired,
+        selectItem: PropTypes.func.isRequired,
+        rank: PropTypes.bool.isRequired
     }
 }
 

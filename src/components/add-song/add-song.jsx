@@ -35,9 +35,7 @@ class AddSong extends Component {
             console.log('请传入收起页面的操作')
         }
     }
-    static propTypes = {
-        hide: PropTypes.func.isRequired,
-    }
+    
     hide = () => {
         this.setState({
             in: false
@@ -146,6 +144,12 @@ class AddSong extends Component {
                 </div>
             </CSSTransition>
         )
+    }
+}
+
+if (process.env.NODE_ENV === 'development') {
+    AddSong.propTypes = {
+        hide: PropTypes.func.isRequired,
     }
 }
 

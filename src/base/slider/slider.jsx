@@ -18,12 +18,7 @@ class Slider extends Component {
         interval: 4000,  // 播发间隔
         click: true      // 能否点击
     }
-    static propTypes = {
-        loop: PropTypes.bool.isRequired, 
-        autoPlay: PropTypes.bool.isRequired, 
-        interval: PropTypes.number.isRequired,
-        click: PropTypes.bool.isRequired
-    }
+    
     componentDidMount() {
         setTimeout(() => {
             this._setSliderWidth();
@@ -154,6 +149,15 @@ class Slider extends Component {
                 </div>
             </div>
         )
+    }
+}
+
+if (process.env.NODE_ENV === 'development') {
+    Slider.propTypes = {
+        loop: PropTypes.bool.isRequired, 
+        autoPlay: PropTypes.bool.isRequired, 
+        interval: PropTypes.number.isRequired,
+        click: PropTypes.bool.isRequired
     }
 }
 

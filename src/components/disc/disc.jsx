@@ -5,7 +5,6 @@ import { getCdInfo } from 'api/recommend';
 import { ERR_OK } from 'api/config';
 import { createSong, isValidMusic } from 'common/js/song';
 import MusicList from 'components/music-list/music-list';
-import './index.styl';
 
 class Disc extends Component {
     state = {

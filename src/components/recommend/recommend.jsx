@@ -7,11 +7,16 @@ import Scroll from 'base/scroll/scroll';
 import Loading from 'base/loading/loading';
 import LazyImage from 'base/lazy-image/lazy-image';
 import playListHOC from 'base/hoc/playListHOC';    // 添加解决播放歌曲后滚动高度适配问题的高阶组件
-import Disc from 'components/disc/disc';
 import { getRecommend, getDiscList } from 'api/recommend';
 import { ERR_OK } from 'api/config';
 import { setDisc } from 'store/actions';
 import './index.styl';
+// 路由懒加载
+import Loadable from 'react-loadable';
+const Disc = Loadable({
+    loader: () => import('components/disc/disc'),
+    loading: Loading
+})
 
 class Recommend extends Component {
     constructor(props) {

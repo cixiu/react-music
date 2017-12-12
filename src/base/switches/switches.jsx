@@ -10,11 +10,7 @@ class Switches extends Component {
             console.log('请传入一个选中switch的index的函数')
         }
     }
-    static propTypes = {
-        switches: PropTypes.array.isRequired,
-        currentIndex: PropTypes.number.isRequired,
-        selectSwitch: PropTypes.func.isRequired,
-    }
+    
     selectSwitch = (index) => {
         this.props.selectSwitch(index)
     }
@@ -33,6 +29,14 @@ class Switches extends Component {
                 ))}
             </ul>
         )               
+    }
+}
+
+if (process.env.NODE_ENV === 'development') {
+    Switches.propTypes = {
+        switches: PropTypes.array.isRequired,
+        currentIndex: PropTypes.number.isRequired,
+        selectSwitch: PropTypes.func.isRequired,
     }
 }
 

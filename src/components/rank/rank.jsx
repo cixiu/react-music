@@ -6,11 +6,16 @@ import LazyImage from 'base/lazy-image/lazy-image';
 import Loading from 'base/loading/loading';
 import Scroll from 'base/scroll/scroll';
 import playListHOC from 'base/hoc/playListHOC';
-import TopList from 'components/top-list/top-list';
 import { getTopList } from 'api/rank';
 import { ERR_OK } from 'api/config';
 import { setTopList } from 'store/actions';
 import './index.styl';
+// 路由懒加载
+import Loadable from 'react-loadable';
+const TopList = Loadable({
+    loader: () => import('components/top-list/top-list'),
+    loading: Loading
+})
 
 class Rank extends Component {
     state = {

@@ -4,7 +4,6 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import SearchBox from 'base/search-box/search-box';
 import Suggest from 'components/suggest/suggest';
-import SingerDetail from 'components/singer-detail/singer-detail';
 import SearchList from 'base/search-list/search-list';
 import Confirm from 'base/confirm/confirm';
 import Scroll from 'base/scroll/scroll';
@@ -14,6 +13,13 @@ import './index.styl';
 import { getHotkey } from 'api/search';
 import { ERR_OK } from 'api/config';
 import { saveSearchHistory, deleteSearchHistory, clearSearchHistory } from 'store/dispatchMultiple';
+// 路由懒加载
+import Loadable from 'react-loadable';
+import Loading from 'base/loading/loading';
+const SingerDetail = Loadable({
+    loader: () => import('components/singer-detail/singer-detail'),
+    loading: Loading
+})
 
 class Search extends Component {
     state = {

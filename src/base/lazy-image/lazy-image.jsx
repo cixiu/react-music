@@ -7,16 +7,18 @@ class LazyImage extends Component {
         height: 50
     }
 
-    static propTypes = {
-        width: PropTypes.number.isRequired,
-        height: PropTypes.number.isRequired,
-    }
-
     render() {
         const { width, height } = this.props;
         return (
             <img width={width} height={height} src={require('../../common/image/default.png')} alt="加载中..."/>
         )
+    }
+}
+
+if (process.env.NODE_ENV === 'development') {
+    LazyImage.propTypes = {
+        width: PropTypes.number.isRequired,
+        height: PropTypes.number.isRequired,
     }
 }
 

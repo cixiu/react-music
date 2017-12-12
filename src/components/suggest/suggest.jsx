@@ -33,12 +33,7 @@ class Suggest extends Component {
             console.log('请传入处理选中搜索词进行存储的函数')
         }
     }
-    static propTypes = {
-        query: PropTypes.string.isRequired,
-        showSinger: PropTypes.bool.isRequired,
-        onBlur: PropTypes.func.isRequired,
-        saveSearch: PropTypes.func.isRequired,
-    }
+    
     // 因为我们在父组件中使用的时条件渲染
     // 当父组件的query不为空时，suggest组件首次挂载，那么在componentDidUpdate生命周期是不会执行的
     // 所以suggest组件挂载时也就是query不为空时就要发生请求了    
@@ -187,6 +182,15 @@ class Suggest extends Component {
                 }
             </Scroll>
         )
+    }
+}
+
+if (process.env.NODE_ENV === 'development') {
+    Suggest.propTypes = {
+        query: PropTypes.string.isRequired,
+        showSinger: PropTypes.bool.isRequired,
+        onBlur: PropTypes.func.isRequired,
+        saveSearch: PropTypes.func.isRequired,
     }
 }
 

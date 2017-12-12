@@ -6,9 +6,7 @@ class NoResult extends Component {
     static defaultProps = {
         title: ''
     }
-    static propTypes = {
-        title: PropTypes.string.isRequired
-    }
+    
     render() {
         const { title } = this.props;    
         return (
@@ -17,6 +15,11 @@ class NoResult extends Component {
                 <p className="no-result-text">{title}</p>
             </div>
         )
+    }
+}
+if (process.env.NODE_ENV === 'development') {
+    NoResult.propTypes = {
+        title: PropTypes.string.isRequired
     }
 }
 
