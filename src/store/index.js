@@ -1,10 +1,11 @@
 import rootReducers from 'store/reducers';
 import { createStore, compose, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
 import { logger } from 'redux-logger';
 import { playMode } from 'common/js/config';
 import { loadSearch, loadPlayed, loadFavorite } from 'common/js/cache';
 
-const middlewares = [];
+const middlewares = [thunk];
 let composeEnhancers = compose;
 
 if (process.env.NODE_ENV === `development`) {
@@ -18,6 +19,7 @@ const initialState = {
     fullScreen: false,
     playList: [],
     sequenceList: [],
+    // currentSong: {},
     mode: playMode.sequence,
     currentIndex: -1,
     disc: {},

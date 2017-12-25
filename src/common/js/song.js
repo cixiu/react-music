@@ -6,7 +6,7 @@ import { Base64 } from 'js-base64';
 let urlMap = {};
 
 export default class Song {
-    constructor({id, mid, mediamid, name, singer, album, duration, url, image}) {
+    constructor({id, mid, mediamid, name, singer, album, duration, image}) {
         this.id = id;
         this.mid = mid;
         this.mediamid = mediamid;
@@ -15,17 +15,12 @@ export default class Song {
         this.album = album;
         this.duration = duration;
         this.image = image;
-        this.filename=`C400${this.mediamid}.m4a`;
+        this.filename=`C400${this.mediamid || this.mid}.m4a`;
         // 确保一首歌曲的 id 只对应一个 url
         if (urlMap[this.id]) {
             this.url = urlMap[this.id];
         } else {
-            if (url) {
-                this.url = url;
-                urlMap[this.id] = url;
-            } else {
-                this._getUrl()
-            }
+            this._getUrl()
         }
     }
 

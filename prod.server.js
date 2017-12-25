@@ -1,4 +1,5 @@
 var express = require('express')
+var history = require('connect-history-api-fallback');
 var axios = require('axios')
 
 var app = express()
@@ -19,7 +20,7 @@ apiRouter.get('/getDiscList', function (req, res) {
         console.log(e)
     });
 });
-    // 代理歌词
+// 代理歌词
 apiRouter.get('/getLyric', function (req, res) {
     const url = 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg';
     axios.get(url, {
@@ -42,7 +43,7 @@ apiRouter.get('/getLyric', function (req, res) {
         console.log(e)
     });
 });
-    // 代理歌单详情
+// 代理歌单详情
 apiRouter.get('/getCdInfo', function (req, res) {
     const url = 'https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg';
     axios.get(url, {
@@ -67,6 +68,10 @@ apiRouter.get('/getCdInfo', function (req, res) {
 });
 
 app.use('/api', apiRouter)
+app.use(express.static('./build'))
+
+// 配置HTML5 History 模式
+app.use(history())
 app.use(express.static('./build'))
 
 var port = process.env.PORT || 8088

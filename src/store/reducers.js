@@ -52,6 +52,18 @@ const setSequenceList = (state = [], action) => {
     }
 }
 
+// 当前播放的歌曲
+// const setCurrentSong = (state = {}, action) => {
+//     switch(action.type) {
+//         case types.SET_CURRENTSONG:
+//             return {
+//                 ...action.song
+//             }
+//         default:
+//             return state
+//     }
+// }
+
 // 播放模式
 const setPlayMode = (state = playMode.sequence, action) => {
     switch (action.type) {
@@ -128,6 +140,7 @@ const rootReducers = combineReducers({
     fullScreen: setFullScreen,
     playList: setPlayList,
     sequenceList: setSequenceList,
+    // currentSong: setCurrentSong,
     mode: setPlayMode,
     currentIndex: setCurrentIndex,
     disc: setDisc,

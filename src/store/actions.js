@@ -1,4 +1,6 @@
 import * as types from './actionTypes';
+// import { getVKey } from 'api/song';
+// import { ERR_OK } from 'api/config';
 
 export const setSinger = (singer) => ({
     type: types.SET_SINGER,
@@ -24,6 +26,27 @@ export const setSequenceList = (list) => ({
     type: types.SET_SEQUENCE_LIST,
     list
 })
+
+// export const getCurrentSong = (song, url) => ({
+//     type: types.SET_CURRENTSONG,
+//     song: {
+//         ...song,
+//         url: url
+//     }
+// })
+
+// export const setCurrentSong = index => (dispatch, getState) => {
+//     const playList = getState().playList;
+//     const currentIndex = getState().currentIndex;
+//     const song = playList[currentIndex];
+//     return getVKey(song.mid, song.filename).then(res => {
+//         if (res.code === ERR_OK) {
+//             const vkey = res.data.items[0].vkey;
+//             const url = `http://dl.stream.qqmusic.qq.com/${song.filename}?vkey=${vkey}&guid=7908462822&uin=0&fromtag=66`;
+//             dispatch(getCurrentSong(song, url));
+//         }
+//     })
+// }
 
 export const setPlayMode = (mode) => ({
     type: types.SET_PLAY_MODE,

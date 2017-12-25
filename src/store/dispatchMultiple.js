@@ -13,9 +13,13 @@ export const selectPlay = (dispatch, list, index, mode) => {
     } else {
         dispatch(types.setPlayList(list))
     }
+    // if (mode === playMode.random) {
+    //     // index = findIndex(list, list[index])
+    // }
     dispatch(types.setPlayStatus(true))
     dispatch(types.setSequenceList(list))
     dispatch(types.setCurrentIndex(index))
+    // dispatch(types.setCurrentSong(index))
 }
 
 // 随机播放全部
@@ -24,8 +28,10 @@ export const playRandom = (dispatch, list) => {
     dispatch(types.setPlayStatus(true))
     let randomList = shuffle(list);
     dispatch(types.setPlayList(randomList))
+    // let index = getRandomInt(0, list.length)
     dispatch(types.setSequenceList(list))
     dispatch(types.setCurrentIndex(0))
+    // dispatch(types.setCurrentSong(index))
 }
 
 // 插入一首歌
