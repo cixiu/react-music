@@ -47,7 +47,7 @@ class MusicList extends Component {
         // 所以Scroll组件中的scroll事件依然会触发，也就是这里的scroll函数依然还在持续的被执行，由于这时已经点击了返回上一路由
         // 组件已经被卸载了，组件中的dom节点已经是undefined，这时还在执行的函数使用这些被卸载的dom就会报错
         // 所以在组件卸载的时候，应该让Scroll停止运行
-        this.Scroll.stop();
+        this.Scroll.destroy();
     }
     componentDidUpdate() {
         // 如果高阶组件不传这个处理函数，则执行实例下的这个方法  否则执行高阶组件下的这个方法

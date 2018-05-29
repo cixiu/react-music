@@ -10,7 +10,7 @@ class LazyImage extends Component {
     render() {
         const { width, height } = this.props;
         return (
-            <img width={width} height={height} src={require('../../common/image/default.png')} alt="加载中..."/>
+            <img width={width} height={height} src={require('../../common/image/default.jpg')} alt="加载中..."/>
         )
     }
 }

@@ -86,6 +86,9 @@ class Scroll extends Component {
     stop = () => {
         this.scroll && this.scroll.stop();
     }
+    destroy = () => {
+        this.scroll && this.scroll.destroy()
+    }
     scrollTo = (...rest) => {
         this.scroll && this.scroll.scrollTo.apply(this.scroll, rest);
     }

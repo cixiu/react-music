@@ -9,7 +9,7 @@ const middlewares = [thunk];
 let composeEnhancers = compose;
 
 if (process.env.NODE_ENV === `development`) {
-    composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
+    composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : compose;
     middlewares.push(logger);
 }
 
